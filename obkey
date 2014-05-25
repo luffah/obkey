@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 #-----------------------------------------------------------------------
 # Openbox Key Editor
 # Copyright (C) 2009 nsf <no.smile.face@gmail.com>
+# v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +24,13 @@
 #-----------------------------------------------------------------------
 
 import sys, os
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 import obkey_classes
 import xml.dom.minidom
 
 def die(widget, data=None):
-	gtk.main_quit()
+	Gtk.main_quit()
 
 # get rc file
 path = os.getenv("HOME") + "/.config/openbox/rc.xml"
@@ -39,7 +40,7 @@ if len(sys.argv) == 2:
 ob = obkey_classes.OpenboxConfig()
 ob.load(path)
 
-win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+win = Gtk.Window(Gtk.WindowType.TOPLEVEL)
 win.set_default_size(640,480)
 win.set_title(obkey_classes.config_title)
 win.connect("destroy", die)
@@ -48,11 +49,11 @@ tbl = obkey_classes.PropertyTable()
 al = obkey_classes.ActionList(tbl)
 ktbl = obkey_classes.KeyTable(al, ob)
 
-vbox = gtk.VPaned()
+vbox = Gtk.VPaned()
 vbox.pack1(tbl.widget, True, False)
 vbox.pack2(al.widget, True, False)
 
-hbox = gtk.HPaned()
+hbox = Gtk.HPaned()
 hbox.pack1(ktbl.widget, True, False)
 hbox.pack2(vbox, False, False)
 
@@ -62,4 +63,4 @@ win.show_all()
 w, h = win.get_size()
 hbox.set_position(w-250)
 ktbl.view.grab_focus()
-gtk.main()
+Gtk.main()
