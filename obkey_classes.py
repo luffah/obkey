@@ -924,7 +924,7 @@ class MiniActionList(ActionList):
 		ActionList.__init__(self, proptable)
 		self.widget.set_size_request(-1, 120)
 		self.view.set_headers_visible(False)
-	
+
 	def create_choices(self,ch):
 		choices = ch
 		action_list = {}
@@ -1161,6 +1161,10 @@ class OCNumber(object):
 
 #=====================================================================================
 # Option Class: OCIf
+#
+# NO UI config yet
+#
+# Reason: keep manually defined IF key bindings
 #=====================================================================================
 
 class OCIf(object):
@@ -1189,11 +1193,6 @@ class OCIf(object):
                                 if not isinstance(child,xml.dom.minidom.Text):
                                     self.props += [child]
 
-
-                self.deparse(action)
-		# parse 'name' attribute, get options hash and parse
-		self.name = xml_parse_attr(dom, "name")
-
         def _parseAction(self, dom):
             li = []
             for el in dom.childNodes:
@@ -1207,8 +1206,6 @@ class OCIf(object):
             return li
 
 	def deparse(self, action):
-	        print action.options
-		#val = action.options[self.name]
 		frag = []
 
 		# props
@@ -1228,16 +1225,16 @@ class OCIf(object):
                 frag.append(themEl)
                 frag.append(elseEl)
 
-                # print
-                zz = xml.dom.minidom.Element("action")
-                for el in frag:
-                    zz.appendChild(el)
-                print zz.toxml()
+                ## print
+                #zz = xml.dom.minidom.Element("action")
+                #for el in frag:
+                #    zz.appendChild(el)
+                #print zz.toxml()
 
                 return frag
 
 	def generate_widget(self, action):
-		label = gtk.Label("If not supported yet")
+		label = Gtk.Label("If not supported yet")
 		return label
 
 #=====================================================================================
