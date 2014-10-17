@@ -1,3 +1,10 @@
+25 May 2014:
+
+* Release 1.1, forked, and code migrated from PyGTK to PyGObject 
+	-- http://github.com/stevenhoneyman/obkey
+
+-----------------------------------------------------------------------------
+
 04 August 2011:
 
 * Release 1.0, development is halted.
