@@ -1017,10 +1017,10 @@ def fixed_toprettyxml(self, indent="", addindent="\t", newl="\n"):
 
 # Option Classes (for OBAction)
 # 1. Parse function for OBAction to parse the data.
-# 2. Getter(s) and Setter(s) for OBAction to operate on the data (registered by 
+# 2. Getter(s) and Setter(s) for OBAction to operate on the data (registered by
 # the parse function).
 # 3. Widget generator for property editor to represent the data.
-# Examples of such classes: string, int, filename, list of actions, 
+# Examples of such classes: string, int, filename, list of actions,
 # list (choose one variant of many), string-int with custom validator(?)
 
 # Actions
@@ -1157,6 +1157,87 @@ class OCNumber(object):
 		num.set_value(action.options[self.name])
 		num.connect('value-changed', changed, action)
 		return num
+
+#=====================================================================================
+# Option Class: OCIf
+#=====================================================================================
+
+class OCIf(object):
+	__slots__ = ('name', 'default', 'props', 'then', 'els')
+
+	def __init__(self, name, default):
+		self.name = name
+		self.default = default
+
+		self.props = []
+		self.then = []
+		self.els = []
+
+	def apply_default(self, action):
+		action.options[self.name] = self.default
+
+	def parse(self, action, dom):
+		node = xml_find_node(dom, self.name)
+                if dom.hasChildNodes():
+			for child in dom.childNodes:
+                            if child.nodeName == "then":
+                                    self.then = self._parseAction(child)
+                            elif child.nodeName == "else":
+                                    self.els  = self._parseAction(child)
+                            else:
+                                if not isinstance(child,xml.dom.minidom.Text):
+                                    self.props += [child]
+
+
+                self.deparse(action)
+		# parse 'name' attribute, get options hash and parse
+		self.name = xml_parse_attr(dom, "name")
+
+        def _parseAction(self, dom):
+            li = []
+            for el in dom.childNodes:
+                if not isinstance(el,xml.dom.minidom.Text):
+		    name = xml_parse_attr(el, "name")
+		    obAct = OBAction()
+                    obAct.name = name
+                    obAct.parse(el);
+                    li.append(obAct)
+
+            return li
+
+	def deparse(self, action):
+	        print action.options
+		#val = action.options[self.name]
+		frag = []
+
+		# props
+                for el in self.props:
+                    frag.append(el)
+
+                # conditions
+                themEl = xml.dom.minidom.Element("then")
+                for el in self.then:
+                    themEl.appendChild(el.deparse())
+
+                # else
+                elseEl = xml.dom.minidom.Element("else")
+                for el in self.els:
+                    elseEl.appendChild(el.deparse())
+
+                frag.append(themEl)
+                frag.append(elseEl)
+
+                # print
+                zz = xml.dom.minidom.Element("action")
+                for el in frag:
+                    zz.appendChild(el)
+                print zz.toxml()
+
+                return frag
+
+	def generate_widget(self, action):
+		label = gtk.Label("If not supported yet")
+		return label
 
 #=====================================================================================
 # Option Class: Boolean
@@ -1416,6 +1497,7 @@ actions = {
 	"Exit": [ OCBoolean("prompt", True) ],
 	"SessionLogout": [ OCBoolean("prompt", True) ],
 	"Debug": [ OCString("string", "") ],
+	"If": [ OCIf("", "") ],
 
 	"Focus": [],
 	"Raise": [],
@@ -1541,7 +1623,10 @@ class OBAction:
 		root = xml.dom.minidom.parseString('<action name="'+str(self.name)+'"/>').documentElement
 		for od in self.option_defs:
 			od_node = od.deparse(self)
-			if od_node:
+                        if isinstance(od_node,list):
+                            for el in od_node:
+				root.appendChild(el)
+                        elif od_node:
 				root.appendChild(od_node)
 		return root
 
