@@ -579,7 +579,13 @@ class PropertyTable:
 		if not action:
 			return
 		for a in action.option_defs:
-			self.add_row(a.name + ":", a.generate_widget(action))
+	                widget = a.generate_widget(action)
+	                # IF can return a list
+	                if isinstance(widget,list):
+                            for row in widget:
+                                        self.add_row(row['name'] + ":", row['widget'])
+		        else:
+		            self.add_row(a.name + ":", widget)
 		self.table.queue_resize()
 		self.table.show_all()
 
@@ -1183,27 +1189,21 @@ class OCIf(object):
 
 	def parse(self, action, dom):
 		node = xml_find_node(dom, self.name)
-                if dom.hasChildNodes():
+		if dom.hasChildNodes():
 			for child in dom.childNodes:
                             if child.nodeName == "then":
-                                    self.then = self._parseAction(child)
+                                    self.then = self._parseAction(dom,action,"then")
                             elif child.nodeName == "else":
-                                    self.els  = self._parseAction(child)
+                                    self.els  = self._parseAction(dom,action, "else")
                             else:
-                                if not isinstance(child,xml.dom.minidom.Text):
-                                    self.props += [child]
+                                    if not isinstance(child,xml.dom.minidom.Text):
+                                            self.props += [child]
 
-        def _parseAction(self, dom):
-            li = []
-            for el in dom.childNodes:
-                if not isinstance(el,xml.dom.minidom.Text):
-		    name = xml_parse_attr(el, "name")
-		    obAct = OBAction()
-                    obAct.name = name
-                    obAct.parse(el);
-                    li.append(obAct)
-
-            return li
+        def _parseAction(self, dom,action,nodeName):
+                obAct = OCFinalActions()
+                obAct.name = nodeName
+                obAct.parse(action,dom);
+                return obAct
 
 	def deparse(self, action):
 		frag = []
@@ -1213,14 +1213,13 @@ class OCIf(object):
                     frag.append(el)
 
                 # conditions
-                themEl = xml.dom.minidom.Element("then")
-                for el in self.then:
-                    themEl.appendChild(el.deparse())
+                #themEl = xml.dom.minidom.Element("then")
+                themEl = self.then.deparse(action)
+                themEl.tagName = "then"
 
                 # else
-                elseEl = xml.dom.minidom.Element("else")
-                for el in self.els:
-                    elseEl.appendChild(el.deparse())
+                elseEl = self.els.deparse(action)
+                elseEl.tagName = "else"
 
                 frag.append(themEl)
                 frag.append(elseEl)
@@ -1234,8 +1233,13 @@ class OCIf(object):
                 return frag
 
 	def generate_widget(self, action):
-		label = Gtk.Label("If not supported yet")
-		return label
+		label = Gtk.Label("IF Not fully supported yet")
+                opts = []
+                for el in self.props:
+                    opts.append({'name': "Cond.", "widget": Gtk.Label(el.toxml())})
+                opts.append({'name': "then", "widget": self.then.generate_widget(action)})
+                opts.append({'name':"else",'widget': self.els.generate_widget(action)})
+		return opts
 
 #=====================================================================================
 # Option Class: Boolean
@@ -1483,6 +1487,7 @@ actions = {
 	"DesktopRight": [ OCBoolean("wrap", True) ],
 	"DesktopUp": [ OCBoolean("wrap", True) ],
 	"DesktopDown": [ OCBoolean("wrap", True) ],
+	"GoToDesktop": [ OCString("to", ""), OCString("wrap", "") ],
 	"DesktopLast": [],
 	"AddDesktopLast": [],
 	"RemoveDesktopLast": [],
