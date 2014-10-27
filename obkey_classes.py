@@ -32,6 +32,7 @@ from gi.repository import Gtk
 import sys
 import os
 import gettext
+from xml.sax.saxutils import escape
 
 #=====================================================================================
 # Config
@@ -1065,6 +1066,7 @@ class OCString(object):
 		val = action.options[self.name]
 		if val == self.default:
 			return None
+		val = escape(val)
 		return xml.dom.minidom.parseString("<"+str(self.name)+">"+str(val)+"</"+str(self.name)+">").documentElement
 
 	def generate_widget(self, action):
