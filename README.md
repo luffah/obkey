@@ -1,6 +1,8 @@
 # obkey
 ObKey - Openbox Key Editor (PyGObject version)
 
+![ObKey](https://raw.githubusercontent.com/luffah/obkey/master/wiki/screenshot_obkey.png)
+
 # About me
 After tried almost every window managers,
 and having recently left my 'awesomewm' configuration behind a sharp #.
