@@ -1,7 +1,7 @@
 # obkey
 ObKey - Openbox Key Editor (PyGObject version)
 
-![ObKey](https://raw.githubusercontent.com/luffah/obkey/master/wiki/screenshot_obkey.png)
+![ObKey](wiki/screenshot_obkey.png)
 
 # About me
 After tried almost every window managers,
@@ -16,7 +16,7 @@ But, it is really boring to edit OpenBox XML rc file.
 After searching in some forums, i found ObKey, which is usefull, but not perfectly usable.
 So i forked the project.
 
-# Bugs/Enhancement 
+# Bugs/Enhancement (Reasons of this fork)
 - you can set keybings, save them, close, and re-open the tool and see that it has disappeared
 - you cannot organize your keybinding collection with drag and drop
 
