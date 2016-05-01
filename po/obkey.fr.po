@@ -1,0 +1,454 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ob-autostart\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: luffah <luffah@runbox.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Français\n"
+"X-Poedit-Country: FRANCE\n"
+"Language-Team: \n"
+
+msgid "obkey"
+msgstr "Raccourcis clavier OpenBox"
+
+msgid "Cu_t"
+msgstr "Coupe_r"
+
+msgid "_Copy"
+msgstr "_Copier"
+
+msgid "_Paste"
+msgstr "_Coller"
+
+msgid "P_aste as child"
+msgstr "_Coller en tant que raccourcis de niveau n + 1 "
+
+msgid "_Remove"
+msgstr "_Supprimer"
+
+msgid "Save "
+msgstr "Enregistrer "
+
+msgid " file"
+msgstr " fichier"
+
+msgid "Insert sibling keybind"
+msgstr "Insérer une combinaison de touches"
+
+msgid "Insert child keybind"
+msgstr "Insérer une sous-combinaison de touches"
+
+msgid "Remove keybind"
+msgstr "Effacer le raccourcis"
+
+msgid "Quit application"
+msgstr "Quitter"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Insert action"
+msgstr "Ajouter une action"
+
+msgid "Remove action"
+msgstr "Enlever une action"
+
+msgid "Move action up"
+msgstr "Monter l'action"
+
+msgid "Move action down"
+msgstr "Descendre l'action"
+
+msgid "Remove all actions"
+msgstr "Effacer toutes les actions"
+
+msgid "Key"
+msgstr "Combinaison"
+
+msgid "Key (text)"
+msgstr "(texte)"
+
+msgid "Chroot"
+msgstr "Rester dans le contexte"
+
+msgid "chainQuitKey:"
+msgstr "Combinaison d'annulation:"
+
+msgid "enabled:"
+msgstr "activé:"
+
+msgid "wmclass:"
+msgstr "wmclass:"
+
+msgid "name:"
+msgstr "Nom:"
+
+msgid "icon:"
+msgstr "Icone:"
+
+msgid "command:"
+msgstr "Commande:"
+
+msgid "prompt:"
+msgstr "Message:"
+
+msgid "menu:"
+msgstr "Menu:"
+
+msgid "dialog:"
+msgstr "Boite de dialogue:"
+
+msgid "bar:"
+msgstr "_bar:"
+
+msgid "raise:"
+msgstr "Monter la fenêtre:"
+
+msgid "allDesktops:"
+msgstr "AllDesktops:"
+
+msgid "panels:"
+msgstr "Panels:"
+
+msgid "desktop:"
+msgstr "Desktop:"
+
+msgid "linear:"
+msgstr "Linear:"
+
+msgid "follow:"
+msgstr "_follow:"
+
+msgid "wrap:"
+msgstr "_wrap:"
+
+msgid "width:"
+msgstr "Largeur:"
+
+msgid "height:"
+msgstr "Hauteur:"
+
+msgid "monitor:"
+msgstr "Moniteur:"
+
+msgid "string:"
+msgstr "chaîne:"
+
+msgid "edge:"
+msgstr "bord:"
+
+msgid "finalactions:"
+msgstr "Actions de fin:"
+
+msgid "startupnotify:"
+msgstr "Notification:"
+
+msgid "none"
+msgstr "Non défini"
+
+msgid "top"
+msgstr "haut dessus"
+
+msgid "left"
+msgstr "à gauche"
+
+msgid "right"
+msgstr "à droite"
+
+msgid "bottom"
+msgstr "en dessous"
+
+msgid "topleft"
+msgstr "en haut à gauche"
+
+msgid "topright"
+msgstr "en haut à droite"
+
+msgid "bottomleft"
+msgstr "en bas à gauche"
+
+msgid "bottomright"
+msgstr "en bas à droite"
+
+msgid "Execute"
+msgstr "Lancer"
+
+msgid "ShowMenu"
+msgstr "Montrer le menu"
+
+msgid "NextWindow"
+msgstr "NextWindow"
+
+msgid "PreviousWindow"
+msgstr "PreviousWindow"
+
+msgid "DirectionalFocusNorth"
+msgstr "DirectionalFocusNorth"
+
+msgid "DirectionalFocusSouth"
+msgstr "DirectionalFocusSouth"
+
+msgid "DirectionalFocusEast"
+msgstr "DirectionalFocusEast"
+
+msgid "DirectionalFocusWest"
+msgstr "DirectionalFocusWest"
+
+msgid "DirectionalFocusNorthEast"
+msgstr "DirectionalFocusNorthEast"
+
+msgid "DirectionalFocusNorthWest"
+msgstr "DirectionalFocusNorthWest"
+
+msgid "DirectionalFocusSouthEast"
+msgstr "DirectionalFocusSouthEast"
+
+msgid "DirectionalFocusSouthWest"
+msgstr "DirectionalFocusSouthWest"
+
+msgid "DirectionalTargetNorth"
+msgstr "DirectionalTargetNorth"
+
+msgid "DirectionalTargetSouth"
+msgstr "DirectionalTargetSouth"
+
+msgid "DirectionalTargetEast"
+msgstr "DirectionalTargetEast"
+
+msgid "DirectionalTargetWest"
+msgstr "DirectionalTargetWest"
+
+msgid "DirectionalTargetNorthEast"
+msgstr "DirectionalTargetNorthEast"
+
+msgid "DirectionalTargetNorthWest"
+msgstr "DirectionalTargetNorthWest"
+
+msgid "DirectionalTargetSouthEast"
+msgstr "DirectionalTargetSouthEast"
+
+msgid "DirectionalTargetSouthWest"
+msgstr "DirectionalTargetSouthWest"
+
+msgid "Desktop"
+msgstr "Desktop"
+
+msgid "DesktopNext"
+msgstr "DesktopNext"
+
+msgid "DesktopPrevious"
+msgstr "DesktopPrevious"
+
+msgid "DesktopLeft"
+msgstr "DesktopLeft"
+
+msgid "DesktopRight"
+msgstr "DesktopRight"
+
+msgid "DesktopUp"
+msgstr "DesktopUp"
+
+msgid "DesktopDown"
+msgstr "DesktopDown"
+
+msgid "DesktopLast"
+msgstr "DesktopLast"
+
+msgid "AddDesktopLast"
+msgstr "AddDesktopLast"
+
+msgid "RemoveDesktopLast"
+msgstr "RemoveDesktopLast"
+
+msgid "AddDesktopCurrent"
+msgstr "AddDesktopCurrent"
+
+msgid "RemoveDesktopCurrent"
+msgstr "RemoveDesktopCurrent"
+
+msgid "ToggleShowDesktop"
+msgstr "ToggleShowDesktop"
+
+msgid "ToggleDockAutohide"
+msgstr "ToggleDockAutohide"
+
+msgid "Reconfigure"
+msgstr "Reconfigure"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "Exit"
+msgstr "Exit"
+
+msgid "SessionLogout"
+msgstr "SessionLogout"
+
+msgid "Debug"
+msgstr "Debug"
+
+msgid "Focus"
+msgstr "Focus"
+
+msgid "Raise"
+msgstr "Raise"
+
+msgid "Lower"
+msgstr "Lower"
+
+msgid "RaiseLower"
+msgstr "RaiseLower"
+
+msgid "Unfocus"
+msgstr "Unfocus"
+
+msgid "FocusToBottom"
+msgstr "FocusToBottom"
+
+msgid "Iconify"
+msgstr "Iconify"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "ToggleShade"
+msgstr "ToggleShade"
+
+msgid "Shade"
+msgstr "Shade"
+
+msgid "Unshade"
+msgstr "Unshade"
+
+msgid "ToggleOmnipresent"
+msgstr "ToggleOmnipresent"
+
+msgid "ToggleMaximizeFull"
+msgstr "ToggleMaximizeFull"
+
+msgid "MaximizeFull"
+msgstr "MaximizeFull"
+
+msgid "UnmaximizeFull"
+msgstr "UnmaximizeFull"
+
+msgid "ToggleMaximizeVert"
+msgstr "ToggleMaximizeVert"
+
+msgid "MaximizeVert"
+msgstr "MaximizeVert"
+
+msgid "UnmaximizeVert"
+msgstr "UnmaximizeVert"
+
+msgid "ToggleMaximizeHorz"
+msgstr "ToggleMaximizeHorz"
+
+msgid "MaximizeHorz"
+msgstr "MaximizeHorz"
+
+msgid "UnmaximizeHorz"
+msgstr "UnmaximizeHorz"
+
+msgid "ToggleFullscreen"
+msgstr "ToggleFullscreen"
+
+msgid "ToggleDecorations"
+msgstr "ToggleDecorations"
+
+msgid "Decorate"
+msgstr "Decorate"
+
+msgid "Undecorate"
+msgstr "Undecorate"
+
+msgid "SendToDesktop"
+msgstr "SendToDesktop"
+
+msgid "SendToDesktopNext"
+msgstr "SendToDesktopNext"
+
+msgid "SendToDesktopPrevious"
+msgstr "SendToDesktopPrevious"
+
+msgid "SendToDesktopLeft"
+msgstr "SendToDesktopLeft"
+
+msgid "SendToDesktopRight"
+msgstr "SendToDesktopRight"
+
+msgid "SendToDesktopUp"
+msgstr "SendToDesktopUp"
+
+msgid "SendToDesktopDown"
+msgstr "SendToDesktopDown"
+
+msgid "Move"
+msgstr "Move"
+
+msgid "Resize"
+msgstr "Resize"
+
+msgid "MoveToCenter"
+msgstr "MoveToCenter"
+
+msgid "MoveResizeTo"
+msgstr "MoveResizeTo"
+
+msgid "MoveRelative"
+msgstr "MoveRelative"
+
+msgid "ResizeRelative"
+msgstr "ResizeRelative"
+
+msgid "MoveToEdgeNorth"
+msgstr "MoveToEdgeNorth"
+
+msgid "MoveToEdgeSouth"
+msgstr "MoveToEdgeSouth"
+
+msgid "MoveToEdgeWest"
+msgstr "MoveToEdgeWest"
+
+msgid "MoveToEdgeEast"
+msgstr "MoveToEdgeEast"
+
+msgid "GrowToEdgeNorth"
+msgstr "GrowToEdgeNorth"
+
+msgid "GrowToEdgeSouth"
+msgstr "GrowToEdgeSouth"
+
+msgid "GrowToEdgeWest"
+msgstr "GrowToEdgeWest"
+
+msgid "GrowToEdgeEast"
+msgstr "GrowToEdgeEast"
+
+msgid "ShadeLower"
+msgstr "ShadeLower"
+
+msgid "UnshadeRaise"
+msgstr "UnshadeRaise"
+
+msgid "ToggleAlwaysOnTop"
+msgstr "ToggleAlwaysOnTop"
+
+msgid "ToggleAlwaysOnBottom"
+msgstr "ToggleAlwaysOnBottom"
+
+msgid "SendToTopLayer"
+msgstr "SendToTopLayer"
+
+msgid "SendToBottomLayer"
+msgstr "SendToBottomLayer"
+
+msgid "SendToNormalLayer"
+msgstr "SendToNormalLayer"
+
+msgid "BreakChroot"
+msgstr "BreakChroot"
+

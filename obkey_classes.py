@@ -43,7 +43,8 @@ from xml.sax.saxutils import escape
 
 config_prefix = '/usr'
 config_icons = os.path.join(config_prefix, 'share/obkey/icons')
-config_locale_dir = os.path.join(config_prefix, 'share/locale')
+#~ config_locale_dir = os.path.join(config_prefix, 'share/locale')
+config_locale_dir = os.path.join('./locale')
 
 gettext.install('obkey', config_locale_dir) # init gettext
 
@@ -1115,7 +1116,6 @@ class OCCombo(object):
 		model = Gtk.ListStore(GObject.TYPE_STRING)
 		for c in self.choices:
 			model.append((_(c),))
-
 		combo = Gtk.ComboBox()
 		combo.set_active(self.choices.index(action.options[self.name]))
 		combo.set_model(model)
