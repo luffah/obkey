@@ -3,6 +3,7 @@
 # Openbox Key Editor
 # Copyright (C) 2009 nsf <no.smile.face@gmail.com>
 # v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
+# (v1.2 - aims to add drag and drop, classed actions, and alerting)  
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -232,14 +233,14 @@ class KeyTable:
 		self.sw_selection_available.append(item)
 
 		item = Gtk.ImageMenuItem(Gtk.STOCK_PASTE)
-		item.connect('activate', lambda menu: self.insert_sibling(self.copied))
+		item.connect('activate', lambda menu: self.insert_sibling(copy.deepcopy(self.copied)))
 		item.get_child().set_label(_("Paste"))
 		context_menu.append(item)
 		self.sw_paste_buffer.append(item)
 
 		item = Gtk.ImageMenuItem(Gtk.STOCK_PASTE)
 		item.get_child().set_label(_("Paste as child"))
-		item.connect('activate', lambda menu: self.insert_child(self.copied))
+		item.connect('activate', lambda menu: self.insert_child(copy.deepcopy(self.copied)))
 		context_menu.append(item)
 		self.sw_insert_child_and_paste.append(item)
 

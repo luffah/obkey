@@ -3,6 +3,8 @@
 # Openbox Key Editor
 # Copyright (C) 2009 nsf <no.smile.face@gmail.com>
 # v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
+# (v1.2 - aims to add drag and drop, classed actions, and alerting)  
+#
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +28,8 @@
 import sys, os
 from gi.repository import Gtk
 from gi.repository import GObject
-import obkey_classes
+#~ import obkey_classes
+import obkey_classes as obkey_classes
 import xml.dom.minidom
 
 def die(widget, data=None):
