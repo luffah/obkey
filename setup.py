@@ -10,10 +10,10 @@ locales = [(os.path.join(localedir, l, 'LC_MESSAGES'),
             [os.path.join('locale', l, 'LC_MESSAGES', 'obkey.mo')]) for l in langs]
 
 setup(name='obkey',
-      version='1.2',
+      version='1.2pre',
       description='Openbox Key Editor',
-      author='luffah',
-      author_email='luffah@runbox.com',
+      author='nsf',
+      author_email='no.smile.face@gmail.com',
       scripts=['obkey'],
       py_modules=['obkey_classes'],
       data_files=[(libdir, ['icons/add_child.png', 'icons/add_sibling.png'])] + locales
