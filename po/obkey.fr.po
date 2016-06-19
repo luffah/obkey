@@ -105,19 +105,19 @@ msgid "bar:"
 msgstr "_bar:"
 
 msgid "raise:"
-msgstr "Monter la fenêtre:"
+msgstr "Mettre en avant la fenêtre:"
 
 msgid "allDesktops:"
-msgstr "AllDesktops:"
+msgstr "Tous les espaces :"
 
 msgid "panels:"
 msgstr "Panels:"
 
 msgid "desktop:"
-msgstr "Desktop:"
+msgstr "Espace de travail:"
 
 msgid "linear:"
-msgstr "Linear:"
+msgstr "Linéaire:"
 
 msgid "follow:"
 msgstr "_follow:"
@@ -174,100 +174,100 @@ msgid "bottomright"
 msgstr "en bas à droite"
 
 msgid "Execute"
-msgstr "Lancer"
+msgstr "Lancer une commande"
 
 msgid "ShowMenu"
 msgstr "Montrer le menu"
 
 msgid "NextWindow"
-msgstr "NextWindow"
+msgstr "Fenêtre suivante"
 
 msgid "PreviousWindow"
-msgstr "PreviousWindow"
+msgstr "Fenêtre précédente"
 
 msgid "DirectionalFocusNorth"
-msgstr "DirectionalFocusNorth"
+msgstr "Focus sur la fenêtre au nord"
 
 msgid "DirectionalFocusSouth"
-msgstr "DirectionalFocusSouth"
+msgstr "Focus sur la fenêtre au sud"
 
 msgid "DirectionalFocusEast"
-msgstr "DirectionalFocusEast"
+msgstr "Focus sur la fenêtre à l'est"
 
 msgid "DirectionalFocusWest"
-msgstr "DirectionalFocusWest"
+msgstr "Focus sur la fenêtre à l'ouest"
 
 msgid "DirectionalFocusNorthEast"
-msgstr "DirectionalFocusNorthEast"
+msgstr "Focus sur la fenêtre au nord est"
 
 msgid "DirectionalFocusNorthWest"
-msgstr "DirectionalFocusNorthWest"
+msgstr "Focus sur la fenêtre au nord ouest"
 
 msgid "DirectionalFocusSouthEast"
-msgstr "DirectionalFocusSouthEast"
+msgstr "Focus sur la fenêtre au sud est"
 
 msgid "DirectionalFocusSouthWest"
-msgstr "DirectionalFocusSouthWest"
+msgstr "Focus sur la fenêtre au sud ouest"
 
 msgid "DirectionalTargetNorth"
-msgstr "DirectionalTargetNorth"
+msgstr "Passe sur la fenêtre au nord"
 
 msgid "DirectionalTargetSouth"
-msgstr "DirectionalTargetSouth"
+msgstr "Passe sur la fenêtre au sud"
 
 msgid "DirectionalTargetEast"
-msgstr "DirectionalTargetEast"
+msgstr "Passe sur la fenêtre à l'est"
 
 msgid "DirectionalTargetWest"
-msgstr "DirectionalTargetWest"
+msgstr "Passe sur la fenêtre à l'ouest"
 
 msgid "DirectionalTargetNorthEast"
-msgstr "DirectionalTargetNorthEast"
+msgstr "Passe sur la fenêtre au nord est"
 
 msgid "DirectionalTargetNorthWest"
-msgstr "DirectionalTargetNorthWest"
+msgstr "Passe sur la fenêtre au nord ouest"
 
 msgid "DirectionalTargetSouthEast"
-msgstr "DirectionalTargetSouthEast"
+msgstr "Passe sur la fenêtre au sud est"
 
 msgid "DirectionalTargetSouthWest"
-msgstr "DirectionalTargetSouthWest"
+msgstr "Passe sur la fenêtre au sud ouest"
 
 msgid "Desktop"
-msgstr "Desktop"
+msgstr "Espace de travail"
 
 msgid "DesktopNext"
-msgstr "DesktopNext"
+msgstr "Espace de travail suivant"
 
 msgid "DesktopPrevious"
-msgstr "DesktopPrevious"
+msgstr "Espace de travail précédent"
 
 msgid "DesktopLeft"
-msgstr "DesktopLeft"
+msgstr "Espace de travail à gauche"
 
 msgid "DesktopRight"
-msgstr "DesktopRight"
+msgstr "Espace de travail à droite"
 
 msgid "DesktopUp"
-msgstr "DesktopUp"
+msgstr "Espace de travail au dessus"
 
 msgid "DesktopDown"
-msgstr "DesktopDown"
+msgstr "Espace de travail en dessous"
 
 msgid "DesktopLast"
-msgstr "DesktopLast"
+msgstr "Dernier espace de travail"
 
 msgid "AddDesktopLast"
-msgstr "AddDesktopLast"
+msgstr "Ajouter un espace de travail (à la fin)"
 
 msgid "RemoveDesktopLast"
-msgstr "RemoveDesktopLast"
+msgstr "Supprimer le dernier espace de travail"
 
 msgid "AddDesktopCurrent"
-msgstr "AddDesktopCurrent"
+msgstr "Ajouter un espace de travail (ici)"
 
 msgid "RemoveDesktopCurrent"
-msgstr "RemoveDesktopCurrent"
+msgstr "Supprimer l'espace de travail en cours"
 
 msgid "ToggleShowDesktop"
 msgstr "ToggleShowDesktop"
@@ -450,5 +450,41 @@ msgid "SendToNormalLayer"
 msgstr "SendToNormalLayer"
 
 msgid "BreakChroot"
-msgstr "BreakChroot"
+msgstr "Sortir du contexte (libère le clavier)"
+
+msgid "If"
+msgstr "Si ... Alors ..."
+
+msgid "Window Navigation"
+msgstr "Changer de fenêtre"
+
+msgid "Window Focus"
+msgstr "Changer le plan d'une fenêtre"
+
+msgid "Window Move"
+msgstr "Déplacer une fenêtre"
+
+msgid "Window Resize"
+msgstr "Redimensionner une fenêtre"
+
+msgid "Window Desktop Change"
+msgstr "Déplacer vers un espace de travail"
+
+msgid "Desktop Navigation"
+msgstr "Changer d'espace de travail"
+
+msgid "Add desktop"
+msgstr "Ajouter un espace de travail"
+
+msgid "Remove desktop"
+msgstr "Supprimer un espace de travail"
+
+msgid "Move to desktop" 
+msgstr "Aller à l'espace de travail..." 
+
+msgid "Window Properties"
+msgstr "Propriétés visuelles des fenêtres"
+
+msgid "Window/Session Management"
+msgstr "Gestionnaire de fenêtres"
 
