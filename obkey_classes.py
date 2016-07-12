@@ -259,7 +259,8 @@ class KeyTable:
 					GObject.TYPE_STRING, # accel string (openbox)
 					GObject.TYPE_BOOLEAN, # chroot
 					GObject.TYPE_BOOLEAN, # show chroot
-					GObject.TYPE_PYOBJECT # OBKeyBind
+					GObject.TYPE_PYOBJECT, # OBKeyBind
+					GObject.TYPE_STRING    # keybind descriptor
 					)
 
 		cqk_model = Gtk.ListStore(GObject.TYPE_UINT, # accel key
@@ -283,16 +284,21 @@ class KeyTable:
 		r1.props.editable = True
 		r1.connect('edited', self.key_edited)
 
+		r3 = Gtk.CellRendererText()
+		r3.props.editable = False
+
 		r2 = Gtk.CellRendererToggle()
 		r2.connect('toggled', self.chroot_toggled)
 
 		c0 = Gtk.TreeViewColumn(_("Key"), r0, accel_key=0, accel_mods=1)
 		c1 = Gtk.TreeViewColumn(_("Key (text)"), r1, text=2)
 		c2 = Gtk.TreeViewColumn(_("Chroot"), r2, active=3, visible=4)
+		c3 = Gtk.TreeViewColumn(_("Action"), r3,  text=6)
 
 		c0.set_expand(True)
 
 		view = Gtk.TreeView(model)
+		view.append_column(c3)
 		view.append_column(c0)
 		view.append_column(c1)
 		view.append_column(c2)
@@ -398,9 +404,22 @@ class KeyTable:
 		accel_key, accel_mods = key_openbox2gtk(kb.key)
 		chroot = kb.chroot
 		show_chroot = len(kb.children) > 0 or not len(kb.actions)
+		
+		# frst_action added in Version 1.2 
+		if len(kb.actions) > 0: 
+			if kb.actions[0].name == "Execute":
+				frst_action = "[ " + kb.actions[0].options['command'] + " ]"
+			elif kb.actions[0].name == "SendToDesktop":
+				frst_action = _(kb.actions[0].name) + " " + str(kb.actions[0].options['desktop']) 
+			elif kb.actions[0].name == "Desktop":
+				frst_action = _(kb.actions[0].name) + " " + str(kb.actions[0].options['desktop'])
+			else :
+				frst_action =  _(kb.actions[0].name) 
+		else :
+			frst_action = "."
 
 		n = self.model.append(parent,
-				(accel_key, accel_mods, kb.key, chroot, show_chroot, kb))
+				(accel_key, accel_mods, kb.key, chroot, show_chroot, kb, frst_action))
 
 		for c in kb.children:
 			self.apply_keybind(c, n)
@@ -667,6 +686,13 @@ class ActionList:
 		choices = ch
 		action_list1 = {}
 		
+		#~ Version 1.1 
+		#~ for a in actions:
+			#~ action_list[_(a)] = a
+		#~ for a in sorted(action_list.keys()):
+			#~ choices.append(None,[a,action_list[a]])
+		
+		# Version 1.2 
 		for a in actions_choices:
 			action_list1[_(a)] = a
 		for a in sorted(action_list1.keys()):
@@ -693,11 +719,6 @@ class ActionList:
 						choices.append(iter0,[b,action_list2[b]] )
 			else:
 				choices.append(None,[a,action_list1[a]] )
-		
-		#~ for a in actions:
-			#~ action_list[_(a)] = a
-		#~ for a in sorted(action_list.keys()):
-			#~ choices.append(None,[a,action_list[a]])
 		
 		return choices
 
