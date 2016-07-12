@@ -20,6 +20,13 @@ So i forked the project.
 - you can set keybings, save them, close, and re-open the tool and see that it has disappeared
 - you cannot organize your keybinding collection with drag and drop
 
+# Changes between obkey 1.1 and obkey 1.2 
+- sorted actions in edition pane
+- direct preview of relations between actions and keybind
+
+TODO -> button to sort the keybind / drag and drop / alerting users on failure
+
+
 # About
 
 This fork aims to continue the project since bugs and enhancement stills needed.
