@@ -74,6 +74,7 @@ replace_table_openbox2gtk = {
   "s" : "<Shift>",
   "hyper" : "<Hyper>",
   "h" : "<Hyper>"
+  
 }
 
 replace_table_gtk2openbox = {
@@ -83,6 +84,7 @@ replace_table_gtk2openbox = {
   "Mod4" : "Mod4",
   "Mod5" : "Mod5",
   "Control" : "C",
+  "Primary" : "C",
   "Alt" : "A",
   "Meta" : "M",
   "Super" : "W",
@@ -276,7 +278,8 @@ class KeyTable:
 		return scroll
 
 	def create_views(self, model, cqk_model):
-		r0 = Gtk.CellRendererAccel()
+		# added accel_mode=1 (CELL_RENDERER_ACCEL_MODE_OTHER) for key "Tab"
+		r0 = Gtk.CellRendererAccel(accel_mode=1)
 		r0.props.editable = True
 		r0.connect('accel-edited', self.accel_edited)
 
@@ -400,11 +403,7 @@ class KeyTable:
 			self.ob.keyboard.chainQuitKey = ""
 		self.cqk_model.append((cqk_accel_key, cqk_accel_mods, self.ob.keyboard.chainQuitKey))
 
-	def apply_keybind(self, kb, parent=None):
-		accel_key, accel_mods = key_openbox2gtk(kb.key)
-		chroot = kb.chroot
-		show_chroot = len(kb.children) > 0 or not len(kb.actions)
-		
+	def get_action_desc(self,kb):
 		# frst_action added in Version 1.2 
 		if len(kb.actions) > 0: 
 			if kb.actions[0].name == "Execute":
@@ -417,9 +416,15 @@ class KeyTable:
 				frst_action =  _(kb.actions[0].name) 
 		else :
 			frst_action = "."
+		return frst_action
 
+	def apply_keybind(self, kb, parent=None):
+		accel_key, accel_mods = key_openbox2gtk(kb.key)
+		chroot = kb.chroot
+		show_chroot = len(kb.children) > 0 or not len(kb.actions)
+		
 		n = self.model.append(parent,
-				(accel_key, accel_mods, kb.key, chroot, show_chroot, kb, frst_action))
+				(accel_key, accel_mods, kb.key, chroot, show_chroot, kb, self.get_action_desc(kb)))
 
 		for c in kb.children:
 			self.apply_keybind(c, n)
@@ -545,7 +550,7 @@ class KeyTable:
 
 		accel_key, accel_mods = key_openbox2gtk(keybind.key)
 		show_chroot = len(keybind.children) > 0 or not len(keybind.actions)
-
+		
 		if it:
 			parent_it = model.iter_parent(it)
 			parent = None
@@ -555,11 +560,11 @@ class KeyTable:
 
 			self._insert_keybind(keybind, parent, after)
 			newit = self.model.insert_after(parent_it, it,
-					(accel_key, accel_mods, keybind.key, keybind.chroot, show_chroot, keybind))
+					(accel_key, accel_mods, keybind.key, keybind.chroot, show_chroot, keybind, self.get_action_desc(keybind)))
 		else:
 			self._insert_keybind(keybind)
 			newit = self.model.append(None,
-					(accel_key, accel_mods, keybind.key, keybind.chroot, show_chroot, keybind))
+					(accel_key, accel_mods, keybind.key, keybind.chroot, show_chroot, keybind, self.get_action_desc(keybind)))
 
 		if newit:
 			for c in keybind.children:
