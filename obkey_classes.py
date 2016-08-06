@@ -3,6 +3,8 @@
 # Openbox Key Editor
 # Copyright (C) 2009 nsf <no.smile.face@gmail.com>
 # v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
+# v1.2pre1 - solve a minor bug on copy-paste bug github.com/luffah/obkey
+# v1.2pre2 - structured presentation of actions... github.com/luffah/obkey
 # (v1.2 - aims to add drag and drop, classed actions, and alerting)  
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
