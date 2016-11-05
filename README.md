@@ -26,7 +26,7 @@ tMSGFILE=LC_MESSAGES/obkey.mo
 # find the translation directory
 tPYTHONPATH=`python -c "import sys; print '\n'.join(sys.path)" | grep 'lib/python2.7$'`
 tPYLANGPATH=`find $tPYTHONPATH -name 'gettext.py' | xargs grep 'mofile_lp =' | sed 's/.*join("\(.*\)".*$/\1/'`
-*
+
 # shall return something like /usr/share/locale-langpack
 echo $tPYLANGPATH
 
