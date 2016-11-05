@@ -3,6 +3,46 @@ ObKey - Openbox Key Editor (PyGObject version)
 
 ![ObKey](wiki/screenshot_obkey.png)
 
+# Installation
+
+```shell
+git clone https://github.com/luffah/obkey.git
+
+# test it works (you can use it directly this way)
+python obkey
+
+# INSTALLATION
+sudo python setup.py
+
+########################################
+# Solve the INTERNATIONALIZATION PROBLEM
+# obkey have translation, but currently there's a bug on installation
+#  due to an inconsistency between the lib 'gettext.py' and the installation made by 'setup.py'
+# you may need to do next procedure to solve it
+
+# take the name of the translation file
+tMSGFILE=LC_MESSAGES/obkey.mo
+
+# find the translation directory
+tPYTHONPATH=`python -c "import sys; print '\n'.join(sys.path)" | grep 'lib/python2.7$'`
+tPYLANGPATH=`find $tPYTHONPATH -name 'gettext.py' | xargs grep 'mofile_lp =' | sed 's/.*join("\(.*\)".*$/\1/'`
+*
+# shall return something like /usr/share/locale-langpack
+echo $tPYLANGPATH
+
+if [ -d $tPYLANGPATH ]
+then
+  ls -1 locale/ | xargs -I{} sudo cp locale/{}/$tMSGFILE $tPYLANGPATH/{}/$tMSGFILE
+fi
+#############################
+
+# Finally run obkey
+obkey
+
+# to try other languages
+LANGUAGE=fr obkey
+
+```
 # About me
 After tried almost every window managers,
 and having recently left my 'awesomewm' configuration behind a sharp #.
