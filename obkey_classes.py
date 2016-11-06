@@ -51,8 +51,8 @@ config_icons = os.path.join(config_prefix, 'share/obkey/icons')
 config_locale_dir = os.path.join(config_prefix, 'share/locale')
 
 # if testing obkey without using setup.py, uncomment these 2 lines
-#config_icons='./icons'
-#config_locale_dir = './locale'
+# config_icons='./icons'
+# config_locale_dir = './locale'
 #
 
 gettext.install('obkey', config_locale_dir) # init gettext
