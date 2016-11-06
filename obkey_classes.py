@@ -44,11 +44,11 @@ from xml.sax.saxutils import escape
 # XXX: Sorry, for now this is it. If you know a better way to do this with setup.py:
 # please mail me.
 
-config_prefix = '/usr'
+# workaround for config prefix problem
+config_prefix = os.path.split(os.path.split(sys.argv[0])[0])[0]
+# config_prefix = '/usr'
 config_icons = os.path.join(config_prefix, 'share/obkey/icons')
-#~ config_locale_dir = os.path.join(config_prefix, 'share/locale')
-config_locale_dir = os.path.join('./locale')
-
+config_locale_dir = os.path.join(config_prefix, 'share/locale')
 gettext.install('obkey', config_locale_dir) # init gettext
 
 # localized title

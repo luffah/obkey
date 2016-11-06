@@ -15,25 +15,31 @@ python obkey
 sudo python setup.py
 
 ########################################
-# Solve the INTERNATIONALIZATION PROBLEM
+## To solve INTERNATIONALIZATION PROBLEM
+#  a workaround has been added in obkey_classes.py to find automaticaly the config_prefix
+#  if this problem persist read this part 
+
+## Solve the INTERNATIONALIZATION PROBLEM
 # obkey have translation, but currently there's a bug on installation
-#  due to an inconsistency between the lib 'gettext.py' and the installation made by 'setup.py'
+#  due to an inconsistency between the lib 'obkey_classes.py' (line 48) and the installation made by 'setup.py'
 # you may need to do next procedure to solve it
 
 # take the name of the translation file
 tMSGFILE=LC_MESSAGES/obkey.mo
 
 # find the translation directory
+# the default directory for python gettext shall be something like /usr/share/locale-langpack
+
 tPYTHONPATH=`python -c "import sys; print '\n'.join(sys.path)" | grep 'lib/python2.7$'`
 tPYLANGPATH=`find $tPYTHONPATH -name 'gettext.py' | xargs grep 'mofile_lp =' | sed 's/.*join("\(.*\)".*$/\1/'`
 
-# shall return something like /usr/share/locale-langpack
 echo $tPYLANGPATH
 
 if [ -d $tPYLANGPATH ]
 then
   ls -1 locale/ | xargs -I{} sudo cp locale/{}/$tMSGFILE $tPYLANGPATH/{}/$tMSGFILE
 fi
+
 #############################
 
 # Finally run obkey
