@@ -87,6 +87,4 @@ Key bindings in OpenBox official site :
 http://openbox.org/wiki/Help:Bindings
 
 If you want to edit shortcut directly in  command line interface,
-see the next project :
-
-https://sourceforge.net/projects/obhotkey/
+see the next project (not updated since 2013...): https://sourceforge.net/projects/obhotkey/
