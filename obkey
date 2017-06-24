@@ -28,20 +28,37 @@
 
 import sys, os
 import gi
+import psutil
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import GObject
-#~ import obkey_classes
 import obkey_classes as obkey_classes
 import xml.dom.minidom
 
 def die(widget, data=None):
 	Gtk.main_quit()
 
-# get rc file
-path = os.getenv("HOME") + "/.config/openbox/rc.xml"
+path=None
+
+# get rc file from args
 if len(sys.argv) == 2:
 	path = sys.argv[1]
+
+# get rc file from current running openbox
+for p in psutil.process_iter():
+    proc = p.as_dict(attrs=['pid', 'name','cmdline'])
+    if proc['name'] == 'openbox':
+        ob_param=proc['cmdline']
+        for i in range(len(ob_param)):
+            if ob_param[i] == '--config-file':
+               path=ob_param[i+1]
+               break
+        break
+
+# get default rc file
+if not path :
+    path = os.getenv("HOME") + "/.config/openbox/rc.xml"
 
 ob = obkey_classes.OpenboxConfig()
 ob.load(path)
