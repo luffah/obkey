@@ -88,3 +88,5 @@ http://openbox.org/wiki/Help:Bindings
 
 If you want to edit shortcut directly in  command line interface,
 see the next project (not updated since 2013...): https://sourceforge.net/projects/obhotkey/
+
+The more serious alternative to obkey is probably lxhotkey : https://github.com/lxde/lxhotkey
