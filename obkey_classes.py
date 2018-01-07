@@ -101,7 +101,8 @@ replace_table_gtk2openbox = {
 }
 
 def key_openbox2gtk(obstr):
-	toks = obstr.split("-")
+	if obstr is not None:
+		toks = obstr.split("-")
 	try:
 		toksgdk = [replace_table_openbox2gtk[mod.lower()] for mod in toks[:-1]]
 	except:
