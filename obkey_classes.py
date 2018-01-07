@@ -5,7 +5,7 @@
 # v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
 # v1.2pre1 - solve a minor bug on copy-paste bug github.com/luffah/obkey
 # v1.2pre2 - structured presentation of actions... github.com/luffah/obkey
-# (v1.2 - aims to add drag and drop, classed actions, and alerting)  
+# (v1.2 - aims to add drag and drop, classed actions, and alerting)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -82,7 +82,7 @@ replace_table_openbox2gtk = {
   "s" : "<Shift>",
   "hyper" : "<Hyper>",
   "h" : "<Hyper>"
-  
+
 }
 
 replace_table_gtk2openbox = {
@@ -307,7 +307,17 @@ class KeyTable:
 		c2 = Gtk.TreeViewColumn(_("Chroot"), r2, active=3, visible=4)
 		c3 = Gtk.TreeViewColumn(_("Action"), r3,  text=6)
 
-		c0.set_expand(True)
+                c0.set_resizable(True)
+                c1.set_resizable(True)
+                c2.set_resizable(True)
+                c3.set_resizable(True)
+                c0.set_fixed_width(200)
+                c1.set_fixed_width(200)
+                c2.set_fixed_width(100)
+                c3.set_fixed_width(200)
+                # the action column is the most important one,
+                # so make it get the extra available space
+                c3.set_expand(True)
 
 		view = Gtk.TreeView(model)
 		view.append_column(c3)
@@ -329,8 +339,6 @@ class KeyTable:
 
 		c0 = Gtk.TreeViewColumn("Key", r0, accel_key=0, accel_mods=1)
 		c1 = Gtk.TreeViewColumn("Key (text)", r1, text=2)
-
-		c0.set_expand(True)
 
 		def cqk_view_focus_lost(view, event):
 			view.get_selection().unselect_all()
@@ -358,12 +366,12 @@ class KeyTable:
 		but.set_tooltip_text(_("Duplicate sibling keybind"))
 		but.connect('clicked', lambda but: self.duplicate_selected())
 		toolbar.insert(but, -1)
-		
+
 		but = Gtk.ToolButton(Gtk.STOCK_COPY)
 		but.set_tooltip_text(_("Copy"))
 		but.connect('clicked', lambda but: self.copy_selected())
 		toolbar.insert(but, -1)
-		
+
 		but = Gtk.ToolButton()
 		but.set_icon_widget(self.icons['add_sibling'])
 		but.set_tooltip_text(_("Insert sibling keybind"))
@@ -374,7 +382,7 @@ class KeyTable:
 		but.set_tooltip_text(_("Paste"))
 		but.connect('clicked', lambda but: self.insert_sibling(copy.deepcopy(self.copied)))
 		toolbar.insert(but, -1)
-		
+
 
 		but = Gtk.ToolButton()
 		but.set_icon_widget(self.icons['add_child'])
@@ -386,7 +394,7 @@ class KeyTable:
 		but.set_tooltip_text(_("Paste as child"))
 		but.connect('clicked', lambda but: self.insert_child(copy.deepcopy(self.copied)))
 		toolbar.insert(but, -1)
-		
+
 		but = Gtk.ToolButton(Gtk.STOCK_REMOVE)
 		but.set_tooltip_text(_("Remove keybind"))
 		but.connect('clicked', lambda but: self.del_selected())
@@ -413,16 +421,16 @@ class KeyTable:
 		self.cqk_model.append((cqk_accel_key, cqk_accel_mods, self.ob.keyboard.chainQuitKey))
 
 	def get_action_desc(self,kb):
-		# frst_action added in Version 1.2 
-		if len(kb.actions) > 0: 
+		# frst_action added in Version 1.2
+		if len(kb.actions) > 0:
 			if kb.actions[0].name == "Execute":
 				frst_action = "[ " + kb.actions[0].options['command'] + " ]"
 			elif kb.actions[0].name == "SendToDesktop":
-				frst_action = _(kb.actions[0].name) + " " + str(kb.actions[0].options['desktop']) 
+				frst_action = _(kb.actions[0].name) + " " + str(kb.actions[0].options['desktop'])
 			elif kb.actions[0].name == "Desktop":
 				frst_action = _(kb.actions[0].name) + " " + str(kb.actions[0].options['desktop'])
 			else :
-				frst_action =  _(kb.actions[0].name) 
+				frst_action =  _(kb.actions[0].name)
 		else :
 			frst_action = "."
 		return frst_action
@@ -431,7 +439,7 @@ class KeyTable:
 		accel_key, accel_mods = key_openbox2gtk(kb.key)
 		chroot = kb.chroot
 		show_chroot = len(kb.children) > 0 or not len(kb.actions)
-		
+
 		n = self.model.append(parent,
 				(accel_key, accel_mods, kb.key, chroot, show_chroot, kb, self.get_action_desc(kb)))
 
@@ -559,7 +567,7 @@ class KeyTable:
 
 		accel_key, accel_mods = key_openbox2gtk(keybind.key)
 		show_chroot = len(keybind.children) > 0 or not len(keybind.actions)
-		
+
 		if it:
 			parent_it = model.iter_parent(it)
 			parent = None
@@ -699,14 +707,14 @@ class ActionList:
 	def create_choices(self, ch):
 		choices = ch
 		action_list1 = {}
-		
-		#~ Version 1.1 
+
+		#~ Version 1.1
 		#~ for a in actions:
 			#~ action_list[_(a)] = a
 		#~ for a in sorted(action_list.keys()):
 			#~ choices.append(None,[a,action_list[a]])
-		
-		# Version 1.2 
+
+		# Version 1.2
 		for a in actions_choices:
 			action_list1[_(a)] = a
 		for a in sorted(action_list1.keys()):
@@ -714,26 +722,26 @@ class ActionList:
 			content_a=actions_choices[action_list1[a]]
 			if ( type(content_a) is dict ):
 				iter0 = choices.append(None,[a,""])
-				
+
 				for b in content_a:
 					action_list2[_(b)] = b
-				
+
 				for b in sorted(action_list2.keys()):
 					action_list3 = {}
 					content_b=content_a[action_list2[b]]
 					if ( type(content_b) is dict ):
 						iter1 = choices.append(iter0,[b,""] )
-				
+
 						for c in content_b:
 							action_list3[_(c)] = c
 						for c in sorted(action_list3.keys()):
 							choices.append(iter1,[c,action_list3[c]])
-				
+
 					else:
 						choices.append(iter0,[b,action_list2[b]] )
 			else:
 				choices.append(None,[a,action_list1[a]] )
-		
+
 		return choices
 
 	def create_scroll(self, view):
@@ -1003,7 +1011,7 @@ class ActionList:
 			return
 		for a in self.actions:
 			self.model.append((_(a.name), a))
-		
+
 		if len(self.model):
 			self.view.get_selection().select_iter(self.model.get_iter_first())
 		self.cond_action_list_nonempty.set_state(len(self.model))
@@ -1597,7 +1605,7 @@ class OCFinalActions(object):
 	#~ "SessionLogout": [ OCBoolean("prompt", True) ],
 	#~ "Debug": [ OCString("string", "") ],
 	#~ "If": [ OCIf("", "") ],
-#~ 
+#~
 	#~ "Focus": [],
 	#~ "Raise": [],
 	#~ "Lower": [],
@@ -1667,7 +1675,7 @@ class OCFinalActions(object):
 	#~ "SendToTopLayer": [],
 	#~ "SendToBottomLayer": [],
 	#~ "SendToNormalLayer": [],
-#~ 
+#~
 	#~ "BreakChroot": []
 #~ }
 
@@ -1849,7 +1857,7 @@ actions_choices["Desktop Navigation"]={
  };
 actions_choices["Window Properties"]=actions_window_set;
 actions_choices["Window/Session Management"]=actions_wm;
-	
+
 
 #=====================================================================================
 # Config parsing and interaction
