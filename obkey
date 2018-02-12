@@ -28,11 +28,8 @@
 
 import sys, os
 import gi
-import psutil
-
-gi.require_version("Gtk", "3.0")
+gi.require_versions({'Gtk': '3.0', 'GLib': '2.0', 'Gio': '2.0'})
 from gi.repository import Gtk
-from gi.repository import GObject
 import obkey_classes as obkey_classes
 import xml.dom.minidom
 
@@ -42,20 +39,23 @@ def die(widget, data=None):
 path=None
 
 # get rc file from args
-if len(sys.argv) == 2:
+if len(sys.argv) > 1:
 	path = sys.argv[1]
 
-# get rc file from current running openbox
-for p in psutil.process_iter():
-    proc = p.as_dict(attrs=['pid', 'name','cmdline'])
-    if proc['name'] == 'openbox':
-        ob_param=proc['cmdline']
-        for i in range(len(ob_param)):
-            if ob_param[i] == '--config-file':
-               path=ob_param[i+1]
-               break
-        break
-
+try:
+    import psutil
+    # get rc file from current running openbox
+    for p in psutil.process_iter():
+        proc = p.as_dict(attrs=['pid', 'name','cmdline'])
+        if proc['name'] == 'openbox':
+            ob_param=proc['cmdline']
+            for i in range(len(ob_param)):
+                if ob_param[i] == '--config-file':
+                   path=ob_param[i+1]
+                   break
+            break
+except ImportError:
+    pass
 # get default rc file
 if not path :
     path = os.getenv("HOME") + "/.config/openbox/rc.xml"
@@ -63,7 +63,8 @@ if not path :
 ob = obkey_classes.OpenboxConfig()
 ob.load(path)
 
-win = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+# win = Gtk.Window(Gtk.WindowType.TOPLEVEL) # deprecated parameter
+win = Gtk.Window()
 win.set_default_size(800,480)
 win.set_title(obkey_classes.config_title)
 win.connect("destroy", die)

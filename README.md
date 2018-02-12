@@ -14,34 +14,6 @@ python obkey
 # INSTALLATION
 sudo python setup.py
 
-########################################
-## To solve INTERNATIONALIZATION PROBLEM
-#  a workaround has been added in obkey_classes.py to find automaticaly the config_prefix
-#  if this problem persist read this part 
-
-## Solve the INTERNATIONALIZATION PROBLEM
-# obkey have translation, but currently there's a bug on installation
-#  due to an inconsistency between the lib 'obkey_classes.py' (line 48) and the installation made by 'setup.py'
-# you may need to do next procedure to solve it
-
-# take the name of the translation file
-tMSGFILE=LC_MESSAGES/obkey.mo
-
-# find the translation directory
-# the default directory for python gettext shall be something like /usr/share/locale-langpack
-
-tPYTHONPATH=`python -c "import sys; print '\n'.join(sys.path)" | grep 'lib/python2.7$'`
-tPYLANGPATH=`find $tPYTHONPATH -name 'gettext.py' | xargs grep 'mofile_lp =' | sed 's/.*join("\(.*\)".*$/\1/'`
-
-echo $tPYLANGPATH
-
-if [ -d $tPYLANGPATH ]
-then
-  ls -1 locale/ | xargs -I{} sudo cp locale/{}/$tMSGFILE $tPYLANGPATH/{}/$tMSGFILE
-fi
-
-#############################
-
 # Finally run obkey
 obkey
 
@@ -49,6 +21,20 @@ obkey
 LANGUAGE=fr obkey
 
 ```
+
+# Dependencies
+
+### with PIP
+
+```shell
+sudo pip install gi gettext
+```
+### with APT
+
+```shell
+sudo apt install python-gi python-gettext
+```
+
 # About me
 After tried almost every window managers,
 and having recently left my 'awesomewm' configuration behind a sharp #.
@@ -66,6 +52,26 @@ So i forked the project.
 - you can set keybings, save them, close, and re-open the tool and see that it has disappeared
 - you cannot organize your keybinding collection with drag and drop
 
+- if a problem occur about internationnalization (gettext), you may need to do next procedure to solve it :
+
+```shell
+# check the lang is well detected in installation pack
+./obkey ~/.config/openbox TESTING
+
+# if gettext is not found, you shall have a message saying that gettext is missing
+
+# take the name of the translation file
+tMSGFILE=LC_MESSAGES/obkey.mo
+
+# find the translation directory
+tPYTHONPATH=`python -c "import sys; print '\n'.join(sys.path)" | grep 'lib/python'`
+tPYLANGPATH=`find $tPYTHONPATH -name 'gettext.py' | xargs grep 'mofile_lp =' | sed 's/.*join("\(.*\)".*$/\1/'`
+
+if [ -d $tPYLANGPATH ]
+then
+  ls -1 locale/ | xargs -I{} sudo cp locale/{}/$tMSGFILE $tPYLANGPATH/{}/$tMSGFILE
+fi
+```
 # Changes between obkey 1.1 and obkey 1.2 
 - sorted actions in edition pane
 - direct preview of relations between actions and keybind
