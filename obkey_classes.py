@@ -65,7 +65,7 @@ config_icons = path_join(config_prefix, 'share/obkey/icons')
 config_locale_dir = path_join(config_prefix, 'share/locale')
 
 # uncomment this for testing
-if (len(sys.argv) > 2) and (sys.argv[2]=='TESTING'):
+if ('TESTING' in sys.argv):
     config_icons='./icons'
     config_locale_dir = './locale'
 

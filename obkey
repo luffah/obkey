@@ -26,7 +26,7 @@
 # THE SOFTWARE.
 #-----------------------------------------------------------------------
 
-import sys, os
+import sys, os, re
 import gi
 gi.require_versions({'Gtk': '3.0', 'GLib': '2.0', 'Gio': '2.0'})
 from gi.repository import Gtk
@@ -39,8 +39,11 @@ def die(widget, data=None):
 path=None
 
 # get rc file from args
-if len(sys.argv) > 1:
-	path = sys.argv[1]
+rcfileregex = re.compile(r'.*\.xml.*')
+rcfiles = filter(rcfileregex.match, sys.argv)
+print(rcfiles)
+if rcfiles:
+	path = rcfiles[0]
 
 try:
     import psutil

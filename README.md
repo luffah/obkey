@@ -56,7 +56,7 @@ So i forked the project.
 
 ```shell
 # check the lang is well detected in installation pack
-./obkey ~/.config/openbox TESTING
+./obkey ~/.config/openbox/rc.xml TESTING
 
 # if gettext is not found, you shall have a message saying that gettext is missing
 
