@@ -1,93 +1,102 @@
 #!/usr/bin/python2
-#-----------------------------------------------------------------------
-# Openbox Key Editor
-# Copyright (C) 2009 nsf <no.smile.face@gmail.com>
-# v1.1 - Code migrated from PyGTK to PyGObject github.com/stevenhoneyman/obkey
-# v1.2pre1 - solve a minor bug on copy-paste bug github.com/luffah/obkey
-# v1.2pre2 - 19.06.2016 - structured presentation of actions... github.com/luffah/obkey
-#
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#-----------------------------------------------------------------------
+"""
+  Openbox Key Editor
+  Copyright (C) 2009 nsf <no.smile.face@gmail.com>
+  v1.1 - Code migrated from PyGTK to PyGObject
+         github.com/stevenhoneyman/obkey
+  v1.2pre  - 19.06.2016 - structured presentation of actions...
+  v1.2     - 24.02.2018 - slightly refactored code - more dynamic
+         github.com/luffah/obkey
 
-import sys, os, re
-import gi
-gi.require_versions({'Gtk': '3.0', 'GLib': '2.0', 'Gio': '2.0'})
-from gi.repository import Gtk
-import obkey_classes as obkey_classes
-import xml.dom.minidom
+  MIT License
 
-def die(widget, data=None):
-	Gtk.main_quit()
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
 
-path=None
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
 
-# get rc file from args
-rcfileregex = re.compile(r'.*\.xml.*')
-rcfiles = filter(rcfileregex.match, sys.argv)
-print(rcfiles)
-if rcfiles:
-	path = rcfiles[0]
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+"""
 
-try:
-    import psutil
-    # get rc file from current running openbox
-    for p in psutil.process_iter():
-        proc = p.as_dict(attrs=['pid', 'name','cmdline'])
-        if proc['name'] == 'openbox':
-            ob_param=proc['cmdline']
-            for i in range(len(ob_param)):
-                if ob_param[i] == '--config-file':
-                   path=ob_param[i+1]
-                   break
-            break
-except ImportError:
-    pass
-# get default rc file
-if not path :
-    path = os.getenv("HOME") + "/.config/openbox/rc.xml"
+import sys
+import os
+import re
+from obkey_parts import PropertyTable, KeyTable, ActionList, OpenboxConfig, Gtk
 
-ob = obkey_classes.OpenboxConfig()
-ob.load(path)
 
-# win = Gtk.Window(Gtk.WindowType.TOPLEVEL) # deprecated parameter
-win = Gtk.Window()
-win.set_default_size(800,480)
-win.set_title(obkey_classes.config_title)
-win.connect("destroy", die)
+def get_rcfile():
+    """return the rcfile from args or find it"""
+    ret = None
+    rcfileregex = re.compile(r'.*\.xml.*')
+    rcfiles = filter(rcfileregex.match, sys.argv)
+    if rcfiles:
+        ret = rcfiles[0]
+    else:
+        try:
+            import psutil
+            # get rc file from current running openbox
+            for pdesc in psutil.process_iter():
+                proc = pdesc.as_dict(attrs=['pid', 'name', 'cmdline'])
+                if proc['name'] == 'openbox':
+                    ob_params = proc['cmdline']
+                    param_name = '--config-file'
+                    if param_name in ob_params:
+                        ret = ob_params[ob_params.index(param_name)+1]
+        except ImportError:
+            pass
+    return ret or (os.getenv("HOME") + "/.config/openbox/rc.xml")
 
-tbl = obkey_classes.PropertyTable()
-al = obkey_classes.ActionList(tbl)
-ktbl = obkey_classes.KeyTable(al, ob)
 
-vbox = Gtk.VPaned()
-vbox.pack1(tbl.widget, True, False)
-vbox.pack2(al.widget, True, False)
+def die(window, application_data=None):
+    """kill the application"""
+    if application_data:
+        pass
+    if window:
+        Gtk.main_quit()
 
-hbox = Gtk.HPaned()
-hbox.pack1(ktbl.widget, True, False)
-hbox.pack2(vbox, False, False)
 
-win.add(hbox)
-win.show_all()
-# get rid of stupid autocalculation
-w, h = win.get_size()
-hbox.set_position(w-250)
-ktbl.view.grab_focus()
-Gtk.main()
+def view():
+    """Initialize obkey window"""
+
+    obkeyconf = OpenboxConfig()
+    obkeyconf.load(get_rcfile())
+
+    # win = Gtk.Window(Gtk.WindowType.TOPLEVEL) # deprecated parameter
+    window = Gtk.Window()
+    window.set_default_size(800, 480)
+    window.set_title('obkey')
+    window.connect("destroy", die)
+
+    propertytable = PropertyTable()
+    actionlist = ActionList(propertytable)
+    keytable = KeyTable(actionlist, obkeyconf)
+
+    verticalbox = Gtk.VPaned()
+    verticalbox.pack1(propertytable.widget, True, False)
+    verticalbox.pack2(actionlist.widget, True, False)
+
+    horizontalbox = Gtk.HPaned()
+    horizontalbox.pack1(keytable.widget, True, False)
+    horizontalbox.pack2(verticalbox, False, False)
+
+    window.add(horizontalbox)
+    window.show_all()
+    # get rid of stupid autocalculation
+    width, _ = window.get_size()
+    horizontalbox.set_position(width-250)
+    keytable.view.grab_focus()
+    Gtk.main()
+
+
+view()

@@ -2,15 +2,19 @@ from distutils.core import setup
 from glob import glob
 import os
 
+# assuming applications are stored in /usr/
 libdir = 'share/obkey/icons'
 localedir = 'share/locale'
+desktopdir = 'share/applications'
 
-langs = [a[len("locale/"):] for a in glob('locale/*')]
-locales = [(os.path.join(localedir, l, 'LC_MESSAGES'),
-            [os.path.join('locale', l, 'LC_MESSAGES', 'obkey.mo')]) for l in langs]
-install_requires=['gi', 'gettext']
+res_icons = 'resources/icons'
+res_locales = 'resources/locale'
+res_desktop = 'misc'
+
+langs = [a[len(res_locales + '/'):] for a in glob(res_locales + '/*')]
+install_requires = ['gi', 'gettext']
 setup(name='obkey',
-      version='1.2pre',
+      version='1.2',
       description='Openbox Key Editor',
       url='https://github.com/luffah/obkey',
       long_description="ObKey ease the keybindings configuration for Openbox.",
@@ -18,14 +22,24 @@ setup(name='obkey',
       author_email='luffah@runbox.com',
       scripts=['obkey'],
       py_modules=['obkey_classes'],
-      data_files=[(libdir, ['icons/add_child.png', 'icons/add_sibling.png'])] + locales,
+      data_files=[(
+          libdir,
+          [res_icons + '/add_child.png', res_icons + '/add_sibling.png']
+      ), (
+          desktopdir,
+          [res_desktop + '/obkey.desktop'],
+
+      )] + [(
+            os.path.join(localedir, l, 'LC_MESSAGES'),
+            [os.path.join(res_locales, l, 'LC_MESSAGES', 'obkey.mo')]
+            ) for l in langs],
       keywords='openbox keybindings keys shortcuts',  # Optional
-      project_urls={ 
-         'Bug Reports': 'https://github.com/luffah/obkey/issues',
-         'Source': 'https://github.com/luffah/obkey/',
-        },
-    # For a list of valid classifiers, see
-    # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+      project_urls={
+          'Bug Reports': 'https://github.com/luffah/obkey/issues',
+          'Source': 'https://github.com/luffah/obkey/',
+      },
+      # For a list of valid classifiers, see
+      # https://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[  # Optional
           # How mature is this project? Common values are
           #   4 - Beta
@@ -47,5 +61,5 @@ setup(name='obkey',
           'Programming Language :: Python :: 3.4',
           'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6',
-          ],
-)
+      ],
+      )
