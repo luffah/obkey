@@ -3,8 +3,10 @@ ObKey - Openbox Key Editor (PyGObject version)
 
 ![ObKey](wiki/screenshot_obkey.png)
 
+
 # Installation
 
+# With Git
 ```shell
 git clone https://github.com/luffah/obkey.git
 
@@ -17,11 +19,22 @@ python obkey
 sudo pip install gi gettext
 sudo python setup.py install
 ```
-## With DEBIAN INSTALLER 
+## With Debian installer 
 ```shell
 sudo apt install python-gi python-gettext
 make deb
 sudo dpkg -i deb_dist/obkey_1.2-1_all.deb
+```
+
+# Without Git
+
+## Debian
+
+Download the package here : [Obkey for debian](https://raw.githubusercontent.com/downloads/luffah/obkey/deb_dist/obkey_1.2.-1_all.deb)
+
+```shell
+sudo apt install python-gi python-gettext
+sudo dpkg -i obkey_1.2-1_all.deb
 ```
 
 # Usage
