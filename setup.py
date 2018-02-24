@@ -21,7 +21,7 @@ setup(name='obkey',
       author='luffah',
       author_email='luffah@runbox.com',
       scripts=['obkey'],
-      py_modules=['obkey_classes'],
+      py_modules=[a.replace('/','.').replace('.py','') for a in  glob('obkey_parts/*.py')],
       data_files=[(
           libdir,
           [res_icons + '/add_child.png', res_icons + '/add_sibling.png']
