@@ -12,17 +12,19 @@ git clone https://github.com/luffah/obkey.git
 
 # test it works (you can use it directly this way)
 python obkey
-```
+
+# MANAGE DEPENDENCIES
+# AND INSTALL
 
 ## With PIP and setup.py
-```shell
 sudo pip install gi gettext
+
 sudo python setup.py install
-```
+
 ## With Debian installer 
-```shell
 sudo apt install python-gi python-gettext
 make deb
+
 sudo dpkg -i deb_dist/obkey_1.2-1_all.deb
 ```
 
@@ -30,7 +32,7 @@ sudo dpkg -i deb_dist/obkey_1.2-1_all.deb
 
 ## Debian
 
-Download the package here : [Obkey for debian](https://raw.githubusercontent.com/downloads/luffah/obkey/deb_dist/obkey_1.2.-1_all.deb)
+Download the package here : [Obkey for debian](https://github.com/luffah/obkey/raw/master/deb_dist/obkey_1.2-1_all.deb)
 
 ```shell
 sudo apt install python-gi python-gettext
