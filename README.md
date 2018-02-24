@@ -34,7 +34,13 @@ sudo dpkg -i deb_dist/obkey_1.2-1_all.deb
 
 Download the package here : [Obkey for debian](https://github.com/luffah/obkey/raw/master/deb_dist/obkey_1.2-1_all.deb)
 
+
 ```shell
+md5sum obkey_1.2-1_all.deb | grep 1fdcb1ee55fc8c5c0db445c1d8b1051c && echo OK
+
+#> 1fdcb1ee55fc8c5c0db445c1d8b1051c  obkey_1.2-1_all.deb
+#> OK
+
 sudo apt install python-gi python-gettext
 sudo dpkg -i obkey_1.2-1_all.deb
 ```
