@@ -27,27 +27,42 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 """
-from Gui import *
-from obkey_parts.Resources import res
+
+import copy
+from obkey_parts.Gui import AUTOMATIC
+from obkey_parts.Gui import (
+        Gtk, SensCondition, SensSwitcher,
+        TYPE_UINT, TYPE_INT, TYPE_STRING, TYPE_BOOLEAN, TYPE_PYOBJECT
+)
+from obkey_parts.Resources import res, _
 from obkey_parts.KeyUtils import key_openbox2gtk, key_gtk2openbox
 from obkey_parts.OBKeyboard import OBKeyBind, OBKeyboard
-# =========================================================
+
+# ======================================================== =
 # KeyTable
 # =========================================================
-class KeyTable:
 
-    def __init__(self, actionlist, ob):
+
+class KeyTable:
+    """KeyTable"""
+
+    def __init__(self, actionlist, obconfig):
+        """__init__
+
+        :param actionlist:
+        :param ob:
+        """
         self.widget = Gtk.VBox()
-        self.ob = ob
-        if ob.keyboard_node:
-            self.keyboard = OBKeyboard(ob.keyboard_node)
+        self.ob = obconfig
+        if obconfig.keyboard_node:
+            self.keyboard = OBKeyboard(obconfig.keyboard_node)
         self.actionlist = actionlist
         actionlist.set_callback(self.actions_cb)
 
         self.icons = self.load_icons()
 
-        self.model, self.cqk_model = self.create_models()
-        self.view, self.cqk_view = self.create_views(
+        self.model, self.cqk_model = self._create_models()
+        self.view, self.cqk_view = self._create_views(
             self.model, self.cqk_model)
 
         # copy & paste
@@ -68,7 +83,7 @@ class KeyTable:
         self.sw_selection_available = SensSwitcher(
             [self.cond_selection_available])
 
-        self.context_menu = self.create_context_menu()
+        self.context_menu = self._create_context_menu()
 
         for kb in self.keyboard.keybinds:
             self.apply_keybind(kb)
@@ -76,15 +91,12 @@ class KeyTable:
         self.apply_cqk_initial_value()
 
         # self.add_child_button
-        self.widget.pack_start(
-            self.create_toolbar(),
-                False, True, 0)
-        self.widget.pack_start(
-            self.create_scroll(self.view),
-                True, True, 0)
-        self.widget.pack_start(
-            self.create_cqk_hbox(self.cqk_view),
-                False, True, 0)
+        self.widget.pack_start(self._create_toolbar(),
+                               False, True, 0)
+        self.widget.pack_start(self._create_scroll(self.view),
+                               True, True, 0)
+        self.widget.pack_start(self._create_cqk_hbox(self.cqk_view),
+                               False, True, 0)
 
         if len(self.model):
             self.view.get_selection().select_iter(self.model.get_iter_first())
@@ -94,7 +106,11 @@ class KeyTable:
         self.sw_paste_buffer.notify()
         self.sw_selection_available.notify()
 
-    def create_cqk_hbox(self, cqk_view):
+    def _create_cqk_hbox(self, cqk_view):
+        """_create_cqk_hbox
+
+        :param cqk_view:
+            """
         cqk_hbox = Gtk.HBox()
         cqk_label = Gtk.Label(label=_("chainQuitKey:"))
         cqk_label.set_padding(5, 5)
@@ -106,7 +122,8 @@ class KeyTable:
         cqk_hbox.pack_start(cqk_frame, True, True, 0)
         return cqk_hbox
 
-    def create_context_menu(self):
+    def _create_context_menu(self):
+        """_create_context_menu"""
         context_menu = Gtk.Menu()
         self.context_items = {}
 
@@ -148,31 +165,41 @@ class KeyTable:
         context_menu.show_all()
         return context_menu
 
-    def create_models(self):
+    def _create_models(self):
+        """_create_models"""
         model = Gtk.TreeStore(
             TYPE_UINT,     # accel key
-                    TYPE_INT,      # accel mods
-                    TYPE_STRING,   # accel string (openbox)
-                    TYPE_BOOLEAN,   # chroot
-                    TYPE_BOOLEAN,   # show chroot
-                    TYPE_PYOBJECT,  # OBKeyBind
-                    TYPE_STRING     # keybind descriptor
-        )
+            TYPE_INT,      # accel mods
+            TYPE_STRING,   # accel string (openbox)
+            TYPE_BOOLEAN,   # chroot
+            TYPE_BOOLEAN,   # show chroot
+            TYPE_PYOBJECT,  # OBKeyBind
+            TYPE_STRING     # keybind descriptor
+            )
 
         cqk_model = Gtk.ListStore(
-            TYPE_UINT,    # accel key
-                    TYPE_INT,     # accel mods
-                    TYPE_STRING)  # accel string (openbox)
+                TYPE_UINT,    # accel key
+                TYPE_INT,     # accel mods
+                TYPE_STRING)  # accel string (openbox)
         return (model, cqk_model)
 
-    def create_scroll(self, view):
+    def _create_scroll(self, view):
+        """_create_scroll
+
+        :param view:
+            """
         scroll = Gtk.ScrolledWindow()
         scroll.add(view)
         scroll.set_policy(AUTOMATIC, AUTOMATIC)
         scroll.set_shadow_type(Gtk.ShadowType.IN)
         return scroll
 
-    def create_views(self, model, cqk_model):
+    def _create_views(self, model, cqk_model):
+        """_create_views
+
+        :param model:
+        :param cqk_model:
+        """
         # added accel_mode=1 (CELL_RENDERER_ACCEL_MODE_OTHER) for key "Tab"
         r0 = Gtk.CellRendererAccel(accel_mode=1)
         r0.props.editable = True
@@ -236,7 +263,8 @@ class KeyTable:
         cqk_view.connect('focus-out-event', cqk_view_focus_lost)
         return (view, cqk_view)
 
-    def create_toolbar(self):
+    def _create_toolbar(self):
+        """_create_toolbar"""
         toolbar = Gtk.Toolbar()
         toolbar.set_style(Gtk.ToolbarStyle.ICONS)
         toolbar.set_show_arrow(False)
@@ -260,6 +288,8 @@ class KeyTable:
                     lambda b: self.copy_selected())
         toolbar.insert(but, -1)
 
+        toolbar.insert(Gtk.SeparatorToolItem(), -1)
+
         but = Gtk.ToolButton()
         but.set_icon_widget(self.icons['add_sibling'])
         but.set_tooltip_text(_("Insert sibling keybind"))
@@ -275,6 +305,8 @@ class KeyTable:
                         copy.deepcopy(self.copied)))
         toolbar.insert(but, -1)
 
+        toolbar.insert(Gtk.SeparatorToolItem(), -1)
+
         but = Gtk.ToolButton()
         but.set_icon_widget(self.icons['add_child'])
         but.set_tooltip_text(_("Insert child keybind"))
@@ -289,6 +321,8 @@ class KeyTable:
                     lambda b: self.insert_child(
                         copy.deepcopy(self.copied)))
         toolbar.insert(but, -1)
+
+        toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
         but = Gtk.ToolButton(Gtk.STOCK_REMOVE)
         but.set_tooltip_text(_("Remove keybind"))
@@ -312,6 +346,7 @@ class KeyTable:
         return toolbar
 
     def apply_cqk_initial_value(self):
+        """apply_cqk_initial_value"""
         cqk_accel_key, cqk_accel_mods = key_openbox2gtk(
             self.keyboard.chain_quit_key)
         if cqk_accel_mods == 0:
@@ -321,6 +356,10 @@ class KeyTable:
             self.keyboard.chain_quit_key))
 
     def get_action_desc(self, kb):
+        """get_action_desc
+
+        :param kb:
+            """
         if len(kb.actions) > 0:
             if kb.actions[0].name == "Execute":
                 frst_action = "[ "\
@@ -338,6 +377,11 @@ class KeyTable:
         return frst_action
 
     def apply_keybind(self, kb, parent=None):
+        """apply_keybind
+
+        :param kb:
+        :param parent:
+        """
         accel_key, accel_mods = key_openbox2gtk(kb.key)
         chroot = kb.chroot
         show_chroot = len(kb.children) > 0 or not len(kb.actions)
@@ -351,15 +395,23 @@ class KeyTable:
             self.apply_keybind(c, n)
 
     def load_icons(self):
+        """load_icons"""
         icons = {}
-        icons['add_sibling'] = Gtk.Image.new_from_file(res.getIcon("add_sibling.png"))
-        icons['add_child'] = Gtk.Image.new_from_file(res.getIcon("add_child.png"))
+        icons['add_sibling'] = Gtk.Image.new_from_file(
+                res.getIcon("add_sibling.png"))
+        icons['add_child'] = Gtk.Image.new_from_file(
+                res.getIcon("add_child.png"))
         return icons
 
     # ----------------------------------------------------------------------------
     # callbacks
 
     def view_button_clicked(self, view, event):
+        """view_button_clicked
+
+        :param view:
+        :param event:
+        """
         if event.button == 3:
             x = int(event.x)
             y = int(event.y)
@@ -371,16 +423,20 @@ class KeyTable:
                 view.set_cursor(path, col, 0)
                 self.context_menu.popup(
                     None, None, None, None,
-                        event.button, time)
+                    event.button, time)
             else:
                 view.grab_focus()
                 view.get_selection().unselect_all()
                 self.context_menu.popup(
                     None, None, None, None,
-                        event.button, time)
+                    event.button, time)
             return 1
 
     def actions_cb(self, val=None):
+        """actions_cb
+
+        :param val:
+        """
         (model, it) = self.view.get_selection().get_selected()
         kb = model.get_value(it, 5)
 
@@ -393,6 +449,10 @@ class KeyTable:
             self.cond_insert_child.set_state(False)
 
     def view_cursor_changed(self, selection):
+        """view_cursor_changed
+
+        :param selection:
+        """
         (model, it) = selection.get_selected()
         actions = None
         if it:
@@ -407,6 +467,14 @@ class KeyTable:
         self.actionlist.set_actions(actions)
 
     def cqk_accel_edited(self, cell, path, accel_key, accel_mods, keycode):
+        """cqk_accel_edited
+
+        :param cell:
+        :param path:
+        :param accel_key:
+        :param accel_mods:
+        :param keycode:
+        """
         self.cqk_model[path][0] = accel_key
         self.cqk_model[path][1] = accel_mods
         kstr = key_gtk2openbox(accel_key, accel_mods)
@@ -415,6 +483,12 @@ class KeyTable:
         self.view.grab_focus()
 
     def cqk_key_edited(self, cell, path, text):
+        """cqk_key_edited
+
+        :param cell:
+        :param path:
+        :param text:
+        """
         self.cqk_model[path][0], self.cqk_model[path][1] \
             = key_openbox2gtk(text)
         self.cqk_model[path][2] = text
@@ -422,6 +496,14 @@ class KeyTable:
         self.view.grab_focus()
 
     def accel_edited(self, cell, path, accel_key, accel_mods, keycode):
+        """accel_edited
+
+        :param cell:
+        :param path:
+        :param accel_key:
+        :param accel_mods:
+        :param keycode:
+        """
         self.model[path][0] = accel_key
         self.model[path][1] = accel_mods
         kstr = key_gtk2openbox(accel_key, accel_mods)
@@ -429,11 +511,22 @@ class KeyTable:
         self.model[path][5].key = kstr
 
     def key_edited(self, cell, path, text):
+        """key_edited
+
+        :param cell:
+        :param path:
+        :param text:
+        """
         self.model[path][0], self.model[path][1] = key_openbox2gtk(text)
         self.model[path][2] = text
         self.model[path][5].key = text
 
     def chroot_toggled(self, cell, path):
+        """chroot_toggled
+
+        :param cell:
+        :param path:
+        """
         self.model[path][3] = not self.model[path][3]
         kb = self.model[path][5]
         kb.chroot = self.model[path][3]
@@ -444,14 +537,17 @@ class KeyTable:
 
     # -------------------------------------------------------------------------
     def cut_selected(self):
+        """cut_selected"""
         self.copy_selected()
         self.del_selected()
 
     def duplicate_selected(self):
+        """duplicate_selected"""
         self.copy_selected()
         self.insert_sibling(copy.deepcopy(self.copied))
 
     def copy_selected(self):
+        """copy_selected"""
         (model, it) = self.view.get_selection().get_selected()
         if it:
             sel = model.get_value(it, 5)
@@ -459,6 +555,12 @@ class KeyTable:
             self.cond_paste_buffer.set_state(True)
 
     def _insert_keybind(self, keybind, parent=None, after=None):
+        """_insert_keybind
+
+        :param keybind:
+        :param parent:
+        :param after:
+        """
         keybind.parent = parent
         if parent:
             kbs = parent.children
@@ -471,6 +573,10 @@ class KeyTable:
             kbs.append(keybind)
 
     def insert_sibling(self, keybind):
+        """insert_sibling
+
+        :param keybind:
+        """
         (model, it) = self.view.get_selection().get_selected()
 
         accel_key, accel_mods = key_openbox2gtk(keybind.key)
@@ -487,9 +593,9 @@ class KeyTable:
             newit = self.model.insert_after(
                 parent_it, it, (
                     accel_key, accel_mods, keybind.key,
-                        keybind.chroot, show_chroot,
-                        keybind,
-                        self.get_action_desc(keybind)))
+                    keybind.chroot, show_chroot,
+                    keybind,
+                    self.get_action_desc(keybind)))
         else:
             self._insert_keybind(keybind)
             newit = self.model.append(None, (
@@ -504,6 +610,10 @@ class KeyTable:
             self.view.get_selection().select_iter(newit)
 
     def insert_child(self, keybind):
+        """insert_child
+
+        :param keybind:
+        """
         (model, it) = self.view.get_selection().get_selected()
         parent = model.get_value(it, 5)
         self._insert_keybind(keybind, parent)
@@ -513,7 +623,8 @@ class KeyTable:
 #         newit =
         self.model.append(it, (
             accel_key, accel_mods, keybind.key,
-            keybind.chroot, show_chroot, keybind))
+            keybind.chroot, show_chroot, keybind,
+            self.get_action_desc(keybind)))
 
 #         if newit:
 #             for c in keybind.children:
@@ -524,6 +635,7 @@ class KeyTable:
             self.actionlist.set_actions(None)
 
     def del_selected(self):
+        """del_selected"""
         (model, it) = self.view.get_selection().get_selected()
         if it:
             kb = model.get_value(it, 5)
@@ -534,4 +646,3 @@ class KeyTable:
             isok = self.model.remove(it)
             if isok:
                 self.view.get_selection().select_iter(it)
-

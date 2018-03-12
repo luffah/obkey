@@ -31,11 +31,20 @@ import xml.dom.minidom as minidom
 from xml.dom.minidom import parseString, Element
 from xml.sax.saxutils import escape
 
+
 def xml_get_str(elt):
+    """xml_get_str
+
+    :param elt:XML element
+    """
     return elt.firstChild.nodeValue if elt.hasChildNodes() else ""
 
 
 def xml_parse_bool(elt):
+    """xml_parse_bool
+
+    :param elt:XML element
+        """
     val = elt.firstChild.nodeValue.lower()
     if val == "true" or val == "yes" or val == "on":
         return True
@@ -43,18 +52,32 @@ def xml_parse_bool(elt):
 
 
 def xml_find_nodes(elt, name):
+    """xml_find_nodes
+
+    :param elt:XML parent element
+    :param name:tag name
+                """
     return [node for node in elt.childNodes if node.nodeName == name]
 
 
 def xml_find_node(elt, name):
+    """xml_find_node
+
+    :param elt:XML parent element
+    :param name:tag name
+        """
     nodes = xml_find_nodes(elt, name)
     return nodes[0] if len(nodes) == 1 else None
 
 
 def fixed_writexml(self, writer, indent="", addindent="", newl=""):
-    # indent = current indentation
-    # addindent = indentation to add to higher levels
-    # newl = newline string
+    """fixed_writexml
+
+    :param writer:XML node
+    :param indent:current indentation
+    :param addindent:indentation to add to higher levels
+    :param newl:newline string
+                """
     writer.write(indent + "<" + self.tagName)
 
     attrs = self._get_attributes()
@@ -76,11 +99,8 @@ def fixed_writexml(self, writer, indent="", addindent="", newl=""):
         writer.write(">%s" % newl)
         for node in self.childNodes:
             fixed_writexml(
-                node, writer,
+                    node, writer,
                     indent + addindent, addindent, newl)
         writer.write("%s</%s>%s" % (indent, self.tagName, newl))
     else:
         writer.write("/>%s" % (newl))
-
-
-

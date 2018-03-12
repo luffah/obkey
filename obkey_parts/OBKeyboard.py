@@ -26,19 +26,25 @@
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
+  ----
+  OBKeyBind class definition
+  OBKeyboard is a collection of OBKeyBind + chainQuitKey
 """
-"""
-   OBKeyBind class definition
-   OBKeyboard is a collection of OBKeyBind + chainQuitKey
-"""
-from obkey_parts.OBActions import OBAction
-from obkey_parts.XmlUtils import xml_find_nodes, xml_find_node, xml_get_str, parseString, Element
+from obkey_parts.ActionList import OBAction
+from obkey_parts.XmlUtils import (
+        xml_find_nodes, xml_find_node, xml_get_str, parseString, Element
+)
 
 
 class OBKeyBind(object):
+
     """OBKeyBind"""
 
     def __init__(self, parent=None):
+        """__init__
+
+        :param parent:
+        """
         self.children = []
         self.actions = []
         self.key = "a"
@@ -72,13 +78,13 @@ class OBKeyBind(object):
         if self.chroot:
             root.setAttribute('chroot', "yes")
             # root = parseString(
-                #'<keybind key="' +
-                    # str(self.key) +
-                # '" chroot="yes"/>').documentElement
+            # ' < keybind key = "' +
+            # str(self.key) +
+            # '" chroot="yes"/ > ').documentElement
         # else:
             # root = parseString(
             #    '<keybind key="' +
-                    # str(self.key) +
+            #       str(self.key) +
             #        '"/>').documentElement
 
         if len(self.children):
@@ -98,9 +104,9 @@ class OBKeyBind(object):
         # newact.mutate("Execute")
 
         # if after:
-            # self.actions.insert(self.actions.index(after) + 1, newact)
+        #     self.actions.insert(self.actions.index(after) + 1, newact)
         # else:
-            # self.actions.append(newact)
+        #     self.actions.append(newact)
         # return newact
 
     def move_up(self, action):
@@ -128,6 +134,10 @@ class OBKeyboard(object):
     """OBKeyboard"""
 
     def __init__(self, dom):
+        """__init__
+
+        :param dom:
+        """
         self.chain_quit_key = None
         self.keybinds = []
 

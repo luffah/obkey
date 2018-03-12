@@ -49,16 +49,30 @@ except ImportError:
 # This is the uber cool switchers/conditions(sensors) system.
 # Helps a lot with widgets sensitivity.
 # =========================================================
+
+
 class SensCondition:
 
     def __init__(self, initial_state):
+        """__init__
+
+        :param initial_state:
+            """
         self.switchers = []
         self.state = initial_state
 
     def register_switcher(self, sw):
+        """register_switcher
+
+        :param sw:
+        """
         self.switchers.append(sw)
 
     def set_state(self, state):
+        """set_state
+
+        :param state:
+        """
         if self.state == state:
             return
         self.state = state
@@ -69,6 +83,10 @@ class SensCondition:
 class SensSwitcher:
 
     def __init__(self, conditions):
+        """__init__
+
+        :param conditions:
+            """
         self.conditions = conditions
         self.widgets = []
 
@@ -76,17 +94,24 @@ class SensSwitcher:
             c.register_switcher(self)
 
     def append(self, widget):
+        """append
+
+        :param widget:
+            """
         self.widgets.append(widget)
 
     def set_sensitive(self, state):
+        """set_sensitive
+
+        :param state:
+            """
         for w in self.widgets:
             w.set_sensitive(state)
 
     def notify(self):
+        """notify"""
         for c in self.conditions:
             if not c.state:
                 self.set_sensitive(False)
                 return
         self.set_sensitive(True)
-
-

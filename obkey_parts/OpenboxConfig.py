@@ -29,26 +29,42 @@
 """
 from StringIO import StringIO
 from os import system
-from obkey_parts.XmlUtils import minidom, xml_find_node, fixed_writexml, parseString
+from obkey_parts.XmlUtils import (
+        minidom, xml_find_node, fixed_writexml, parseString
+)
+
 
 class OpenboxConfig:
+
     """OpenboxConfig"""
 
     def __init__(self):
+        """__init__"""
         self.dom = None
         self.keyboard = None
         self.path = None
 
     def load(self, path):
+        """load
+
+        :param path:
+        """
         self.path = path
 
         # load config DOM
         self.dom = minidom.parse(path)
 
         # try load keyboard DOM
-        self.keyboard_node = xml_find_node(self.dom.documentElement, "keyboard")
+        self.keyboard_node = xml_find_node(
+                self.dom.documentElement,
+                "keyboard"
+        )
 
     def save(self, keyboard_node):
+        """save
+
+        :param keyboard_node:
+        """
         if self.path is None:
             return
 
@@ -67,4 +83,5 @@ class OpenboxConfig:
         self.reconfigure_openbox()
 
     def reconfigure_openbox(self):
+        """reconfigure_openbox"""
         system("openbox --reconfigure")

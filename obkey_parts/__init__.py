@@ -30,7 +30,10 @@
 """
 
 from obkey_parts.OpenboxConfig import OpenboxConfig
-from obkey_parts.OBActions import ActionList
+from obkey_parts.ActionList import ActionList
 from obkey_parts.KeyTable import KeyTable
 from obkey_parts.PropertyTable import PropertyTable
 from obkey_parts.Gui import Gtk
+# internal needs
+from obkey_parts.OBKeyboard import OBKeyboard
+from obkey_parts.Resources import _

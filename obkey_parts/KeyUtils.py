@@ -27,54 +27,66 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 """
-from Gui import Gtk
+from obkey_parts.Gui import Gtk
 # =========================================================
 # Key utils
 # =========================================================
 
-replace_table_openbox2gtk = {
-   "mod1": "<Mod1>", "mod2": "<Mod2>", "mod3": "<Mod3>", "mod4": "<Mod4>", "mod5": "<Mod5>",
-   "control": "<Ctrl>", "c": "<Ctrl>",
-   "alt": "<Alt>", "a": "<Alt>",
-   "meta": "<Meta>", "m": "<Meta>",
-   "super": "<Super>", "w": "<Super>",
-   "shift": "<Shift>", "s": "<Shift>",
-   "hyper": "<Hyper>", "h": "<Hyper>"
-   }
+REPLACE_TABLE_OPENBOX2GTK = {
+    "mod1": "<Mod1>", "mod2": "<Mod2>",
+    "mod3": "<Mod3>", "mod4": "<Mod4>", "mod5": "<Mod5>",
+    "control": "<Ctrl>", "c": "<Ctrl>",
+    "alt": "<Alt>", "a": "<Alt>",
+    "meta": "<Meta>", "m": "<Meta>",
+    "super": "<Super>", "w": "<Super>",
+    "shift": "<Shift>", "s": "<Shift>",
+    "hyper": "<Hyper>", "h": "<Hyper>"
+}
 
-replace_table_gtk2openbox = {
-   "Mod1": "Mod1", "Mod2": "Mod2", "Mod3": "Mod3", "Mod4": "Mod4", "Mod5": "Mod5",
-   "Control": "C", "Primary": "C",
-   "Alt": "A",
-   "Meta": "M",
-   "Super": "W",
-   "Shift": "S",
-   "Hyper": "H"
-   }
+REPLACE_TABLE_GTK2OPENBOX = {
+    "Mod1": "Mod1", "Mod2": "Mod2",
+    "Mod3": "Mod3", "Mod4": "Mod4", "Mod5": "Mod5",
+    "Control": "C", "Primary": "C",
+    "Alt": "A",
+    "Meta": "M",
+    "Super": "W",
+    "Shift": "S",
+    "Hyper": "H"
+}
 
 
 def key_openbox2gtk(obstr):
+    """key_openbox2gtk
+
+    :param obstr:
+                """
     if obstr is not None:
         toks = obstr.split("-")
     try:
-        toksgdk = [replace_table_openbox2gtk[mod.lower()] for mod in toks[:-1]]
-    except Exception:
+        toksgdk = [REPLACE_TABLE_OPENBOX2GTK[mod.lower()] for mod in toks[:-1]]
+    except BufferError:
         return (0, 0)
     toksgdk.append(toks[-1])
     return Gtk.accelerator_parse("".join(toksgdk))
 
 
 def key_gtk2openbox(key, mods):
+    """key_gtk2openbox
+
+    :param key:
+    :param mods:
+    """
     result = ""
     if mods:
-        s = Gtk.accelerator_name(0, mods)
-        svec = [replace_table_gtk2openbox[i] for i in s[1:-1].split('><')]
-        result = '-'.join(svec)
+        modtable = Gtk.accelerator_name(0, mods)
+        modtable = [
+                REPLACE_TABLE_GTK2OPENBOX[i]
+                for i in modtable[1:-1].split('><')
+                ]
+        result = '-'.join(modtable)
     if key:
-        k = Gtk.accelerator_name(key, 0)
+        keychar = Gtk.accelerator_name(key, 0)
         if result != "":
             result += '-'
-        result += k
+        result += keychar
     return result
-
-

@@ -14,26 +14,29 @@ msgstr ""
 msgid "obkey"
 msgstr "Raccourcis clavier OpenBox"
 
-msgid "Cu_t"
-msgstr "Coupe_r"
+msgid "Cut"
+msgstr "Couper"
 
-msgid "_Copy"
-msgstr "_Copier"
+msgid "Copy"
+msgstr "Copier"
 
-msgid "_Paste"
-msgstr "_Coller"
+msgid "Paste"
+msgstr "Coller"
 
-msgid "P_aste as child"
-msgstr "_Coller en tant que raccourcis de niveau n + 1 "
+msgid "Paste as child"
+msgstr "Coller en tant que raccourcis de niveau n + 1 "
 
-msgid "_Remove"
-msgstr "_Supprimer"
+msgid "Remove"
+msgstr "Supprimer"
 
 msgid "Save "
 msgstr "Enregistrer "
 
 msgid " file"
 msgstr " fichier"
+
+msgid "Duplicate sibling keybind"
+msgstr "Dupliquer la combinaison de touches sélectionnée"
 
 msgid "Insert sibling keybind"
 msgstr "Insérer une combinaison de touches"

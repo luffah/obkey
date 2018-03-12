@@ -28,14 +28,18 @@
   THE SOFTWARE.
 """
 
-from Gui import *
+from obkey_parts.Resources import _
+from obkey_parts.Gui import Gtk, NEVER, AUTOMATIC, EXPAND, FILL
+
 # =========================================================
 # PropertyTable
 # =========================================================
 
+
 class PropertyTable:
 
     def __init__(self):
+        """__init__"""
         self.widget = Gtk.ScrolledWindow()
         self.table = Gtk.Table(1, 2)
         self.table.set_row_spacings(5)
@@ -43,16 +47,22 @@ class PropertyTable:
         self.widget.set_policy(NEVER, AUTOMATIC)
 
     def add_row(self, label_text, table):
+        """add_row
+
+        :param label_text:
+        :param table:
+        """
         label = Gtk.Label(label=_(label_text))
         label.set_alignment(0, 0)
         row = self.table.props.n_rows
         self.table.attach(
             label, 0, 1, row, row + 1,
-                EXPAND | FILL,
-                0, 5, 0)
+            EXPAND | FILL,
+            0, 5, 0)
         self.table.attach(table, 1, 2, row, row + 1, FILL, 0, 5, 0)
 
     def clear(self):
+        """clear"""
         cs = self.table.get_children()
         cs.reverse()
         for c in cs:
@@ -60,7 +70,19 @@ class PropertyTable:
         self.table.resize(1, 2)
 
     def set_action(self, action, cb=None):
+        """set_action
+
+        :param action:
+        :param cb:
+        """
         self.clear()
+        # label = Gtk.Label(label=_('Properties'))
+        # label.set_alignment(0, 0)
+        # row = self.table.props.n_rows
+        # self.table.attach(
+        # label, 0, 1, row, row + 1,
+        # EXPAND | FILL,
+        # 0, 5, 0)
         if not action:
             return
         for a in action.option_defs:
@@ -75,9 +97,7 @@ class PropertyTable:
         self.table.show_all()
 
 
-
 # event = gtk.gdk.Event(gtk.gdk.FOCUS_CHANGE)
 # event.window = entry.get_window()  # the gtk.gdk.Window of the widget
 # event.send_event = True  # this means you sent the event explicitly
 # event.in_ = False  # False for focus out, True for focus in
-

@@ -28,7 +28,7 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 """
-# import __builtin__
+import __builtin__
 from os.path import join as path_join, dirname, isdir
 import sys
 
@@ -38,28 +38,39 @@ import sys
 
 
 class Resources(object):
+
     """Resources of the application"""
+
     def __init__(self, argv):
+        """__init__
+
+        :param argv:
+                """
         if isdir('./resources/icons') and isdir('./resources/locale'):
             self.icons = './resources/icons'
             self.locale_dir = './resources/locale'
         else:
-            config_prefix=dirname(dirname(argv[0]))
+            config_prefix = dirname(dirname(argv[0]))
             self.icons = path_join(config_prefix, 'share/obkey/icons')
             self.locale_dir = path_join(config_prefix, 'share/locale')
         try:
             from gettext import install as gettext_init
             gettext_init('obkey', self.locale_dir)
         except ImportError:
-            print("Gettext is missing")
+            print "Gettext is missing"
 
             def _(a):
                 return a
 
     def getIcon(self, fname):
+        """getIcon
+
+        :param fname:
+                """
         return path_join(self.icons, fname)
 
-res=Resources(sys.argv)
+
+res = Resources(sys.argv)
 
 # trick for syntax checkers
-# _ = __builtin__.__dict__['_']
+_ = __builtin__.__dict__['_']
