@@ -72,36 +72,76 @@ def view():
     obkeyconf = OpenboxConfig()
     obkeyconf.load(get_rcfile())
 
-    # win = Gtk.Window(Gtk.WindowType.TOPLEVEL) # deprecated parameter
     window = Gtk.Window()
-    window.set_default_size(800, 480)
+
     window.set_title('obkey')
     window.connect("destroy", die)
+
+    width = window.get_preferred_width()[1]
+    height = window.get_preferred_height()[1]
 
     propertytable = PropertyTable()
     actionlist = ActionList(propertytable)
     keytable = KeyTable(actionlist, obkeyconf)
-    # verticalbox = Gtk.VPaned()
-    # verticalbox.pack1(propertytable.widget, True, True)
-    # verticalbox.pack2(actionlist.widget, True, True)
+    VBOX_GRID = False
+    # FIXME: none of the 2 solutions are clean
+    if VBOX_GRID:
+        # FIXME : got problems when changing the element in the keytabl
+        window.set_default_size(max(width,800), max(height,600))
+        verticalbox = Gtk.VPaned()
+        verticalbox.pack1(propertytable.widget, True, True)
+        verticalbox.pack2(actionlist.widget, True, True)
 
-    # horizontalbox = Gtk.HPaned()
-    # horizontalbox.pack1(keytable.widget, True, False)
-    # horizontalbox.pack2(verticalbox, False, False)
-
-    # window.add(horizontalbox)
-
-    grid = Gtk.Grid(column_homogeneous=True, column_spacing=5, row_spacing=200)
-    grid.attach(keytable.widget, 0, 0, 2, 4)
-    grid.attach(propertytable.widget, 2, 0, 1, 3)
-    grid.attach(actionlist.widget, 2, 2, 1, 2)
-    # grid.set_hexpand(True)
-    # grid.set_vexpand(True)
-# EXPAND | FILL,
-    window.add(grid)
+        horizontalbox = Gtk.HPaned()
+        horizontalbox.pack1(keytable.widget, True, False)
+        horizontalbox.pack2(verticalbox, False, False)
+        window.add(horizontalbox)
+    else :
+        # FIXME : got problems in fullscreen mode
+        window.set_default_size(width, height)
+        grid = Gtk.Grid(column_homogeneous=True, column_spacing=5, row_spacing=200)
+        grid.attach(keytable.widget, 0, 0, 2, 4)
+        grid.attach(propertytable.widget, 2, 0, 1, 3)
+        grid.attach(actionlist.widget, 2, 2, 1, 2)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        window.add(grid)
     window.show_all()
     keytable.view.grab_focus()
+    window.set_default_size(height, width)
     Gtk.main()
 
 
-view()
+OPT_DESC = {
+    'rc.xml': ['OpenBox configuration file to edit'],
+    '--help|-h': ['Show this help'],
+}
+
+def usage():
+    """usage"""
+    opt = []
+    for (optname, optdesc) in OPT_DESC.items():
+        tmpopt = [optname]
+        if len(optdesc) > 1: # params
+            tmpopt.extend(optdesc[1].keys())
+        opt.append(' '.join(tmpopt))
+    print(
+        'Usage : ' + sys.argv[0] + ' ' +
+        ' '.join(
+            [('[%s]' % a) for a in opt]
+            )
+        )
+    for (optname, optdesc) in OPT_DESC.items():
+        print "{0:<14s} {1:s}".format(optname, optdesc[0])
+        tmpopt = [optname]
+        if len(optdesc) > 1: # params
+            for (param, pdesc) in optdesc[1].items():
+                print "  {0:<14s} {1:s}".format(param, pdesc)
+
+if __name__ == '__main__':
+    help_re = re.compile('--help|-h')
+    help_matched = filter(help_re.match, sys.argv)
+    if help_matched:
+        usage()
+    else:
+        view()

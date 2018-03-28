@@ -2,8 +2,9 @@
 lang:
 	cd po; make
 
-installdeb:
-	dpkg -i deb_dist/obkey_1.2-1_all.deb
+installdeb: deb
+	sudo dpkg -i ./obkey.deb
+	# find . -mtime 0 -name '*.deb' -exec sudo dpkg -i {} +
 
 installpy:
 	python setup.py install
@@ -15,6 +16,10 @@ deb: lang
 		--section x11
 	cd deb_dist/obkey-*/; \
 	dpkg-buildpackage -rfakeroot -uc -us
+	find . -mtime 0 -name '*.deb' -exec cp {} ./obkey.deb \;
 
 lint:
 	pylint --output-format=parseable --reports=y ./obkey_parts | tee pylint.log
+
+clean:
+	rm -rf deb_dist dist build obkey.egg-info

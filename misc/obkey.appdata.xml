@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2009-2011 nsf <no.smile.face@gmail.com> -->
+<!-- Copyright (C) 2011-2017 stevenhoneyman (github.com/stevenhoneyman/obkey) -->
+<!-- Copyright (C) 2016-2018 Luffah <luffah@runbox.com> -->
+<!--  The AppData files override any values which are automatically fetched by the AppStream data generator. Applications can ship one or more files in /usr/share/metainfo/%{id}.appdata.xml.  -->
+<component type="desktop-application">
+  <id>org.obkey.obkey</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>ObKey</name>
+  <name xml:lang="fr">ObKey</name>
+  <summary>OpenBox keybinding editor</summary>
+  <summary xml:lang="fr">Éditeur de raccourcis claviers OpenBox</summary>
+  <description>
+    <p>
+      ObKey shows your OpenBox keybinds in a list, and details the actions in a side pane. .
+      <br>
+      ObKey is complementary with ObConf.
+    </p>
+    <p>In short, you can easily customize these types of keybinds:</p>
+    <ul>
+      <li>applications you launch</li>
+      <li>window positions and size</li>
+      <li>workspace management</li>
+    </ul>
+    <p>(Note : can be used with LXDE)</p>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Obkey keybind list</caption>
+      <image>https://github.com/luffah/obkey/raw/master/wiki/screenshot_obkey.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">http://github.com/luffah/obkey</url>
+  <project_group>Utilities</project_group>
+
+  <provides>
+    <binary>obkey</binary>
+  </provides>
+
+</component>

@@ -37,3 +37,4 @@ from obkey_parts.Gui import Gtk
 # internal needs
 from obkey_parts.OBKeyboard import OBKeyboard
 from obkey_parts.Resources import _
+from obkey_parts.__version__ import __version__, __description__, __long_description__
