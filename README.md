@@ -21,8 +21,8 @@ LANGUAGE=fr obkey
 [OpenBox](http://openbox.org/wiki/Main_Page) is one of the most customizable Window Manager.<br>
 [OpenBox](http://openbox.org/wiki/Main_Page) allows to precisely place windows and to easily switch without clicking a mouse.<br>
 [OpenBox](http://openbox.org/wiki/Main_Page) configuration is written in XML, the configuration file is in `~/.config/openbox/rc.xml`.<br>
-Some desktop environnement use a custom configuration file...<br>
-Hey, stop ! you don't need to edit directly the XML file, there's [ObConf](https://github.com/danakj/obconf) and [ObKey](#) !
+Some desktop environment use a custom configuration file...<br>
+Hey, stop ! You don't need to edit directly the XML file, there's [ObConf](https://github.com/danakj/obconf) and [ObKey](#) !
 
 # Installation
 

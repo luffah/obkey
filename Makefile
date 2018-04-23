@@ -18,6 +18,15 @@ deb: lang
 	dpkg-buildpackage -rfakeroot -uc -us
 	find . -mtime 0 -name '*.deb' -exec cp {} ./obkey.deb \;
 
+deb-pub: lang
+	python setup.py \
+		--command-packages=stdeb.command sdist_dsc \
+		--package obkey \
+		--section x11
+	cd deb_dist/obkey-*/; \
+	dpkg-buildpackage -k${DEBEMAIL}
+	find . -mtime 0 -name '*.deb' -exec cp {} ./obkey.deb \;
+
 lint:
 	pylint --output-format=parseable --reports=y ./obkey_parts | tee pylint.log
 
