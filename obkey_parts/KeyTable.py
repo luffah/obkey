@@ -1,37 +1,14 @@
 """
   This file is a part of Openbox Key Editor
-  Copyright (C) 2009 nsf <no.smile.face@gmail.com>
-  v1.1 - Code migrated from PyGTK to PyGObject
-         github.com/stevenhoneyman/obkey
-  v1.2pre  - 19.06.2016 - structured presentation of actions...
-  v1.2     - 24.02.2018 - slightly refactored code - more dynamic
-         github.com/luffah/obkey
-
-  MIT License
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  THE SOFTWARE.
+  Code under GPL (originally MIT) from version 1.3 - 2018.
+  See Licenses information in ../obkey .
 """
 
 import copy
+import re
 from obkey_parts.Gui import AUTOMATIC
 from obkey_parts.Gui import (
-        Gtk, SensCondition, SensSwitcher,
+        Gtk, Gdk, SensCondition, SensSwitcher,
         TYPE_UINT, TYPE_INT, TYPE_STRING, TYPE_BOOLEAN, TYPE_PYOBJECT
 )
 from obkey_parts.Resources import res, _
@@ -46,14 +23,33 @@ from obkey_parts.OBKeyboard import OBKeyBind, OBKeyboard
 class KeyTable:
     """KeyTable"""
 
-    def __init__(self, actionlist, obconfig):
+    def __init__(self, actionlist, obconfig, window):
         """__init__
 
         :param actionlist:
         :param ob:
         """
+        self.window =  window
         self.widget = Gtk.VBox()
         self.ob = obconfig
+        self.changed_items_paths = list()
+        self.deleted_items_paths = list()
+        self.deleted_items_paths_lvl = dict()
+        self.colors = {
+                'deleting':[
+                   "#FF5633",
+                   "#FD4727",
+                   "#EC361B",
+                   "#DC220D",
+                   "#CC0000",
+                   "#BC0000",
+                   "#AC0000",
+                   "#9D0000",
+                   "#8D0000"
+                    ],
+                'changed':"#aaaaff"
+                }
+
         if obconfig.keyboard_node:
             self.keyboard = OBKeyboard(obconfig.keyboard_node)
         self.actionlist = actionlist
@@ -165,6 +161,7 @@ class KeyTable:
         context_menu.show_all()
         return context_menu
 
+
     def _create_models(self):
         """_create_models"""
         model = Gtk.TreeStore(
@@ -176,7 +173,6 @@ class KeyTable:
             TYPE_PYOBJECT,  # OBKeyBind
             TYPE_STRING     # keybind descriptor
             )
-
         cqk_model = Gtk.ListStore(
                 TYPE_UINT,    # accel key
                 TYPE_INT,     # accel mods
@@ -187,7 +183,7 @@ class KeyTable:
         """_create_scroll
 
         :param view:
-            """
+        """
         scroll = Gtk.ScrolledWindow()
         scroll.add(view)
         scroll.set_policy(AUTOMATIC, AUTOMATIC)
@@ -219,7 +215,10 @@ class KeyTable:
         c1 = Gtk.TreeViewColumn(_("Key (text)"), r1, text=2)
         c2 = Gtk.TreeViewColumn(_("Chroot"), r2, active=3, visible=4)
         c3 = Gtk.TreeViewColumn(_("Action"), r3,  text=6)
-
+        c0.set_cell_data_func(r0, self._cell_func)
+        c1.set_cell_data_func(r1, self._cell_func)
+        c2.set_cell_data_func(r2, self._cell_func)
+        c3.set_cell_data_func(r3, self._cell_func)
         c0.set_resizable(True)
         c1.set_resizable(True)
         c2.set_resizable(True)
@@ -232,13 +231,54 @@ class KeyTable:
         # so make it get the extra available space
         c3.set_expand(True)
 
+        # SORT
+        def compare(model, row1, row2, user_data):
+            sort_column, _ = model.get_sort_column_id()
+            value1 = model.get_value(row1, sort_column)
+            value2 = model.get_value(row2, sort_column)
+            if value1 < value2:
+                return -1
+            elif value1 == value2:
+                return 0
+            else:
+                return 1
+
+        c3.set_sort_column_id(6)
+        model.set_sort_func(6, compare, None)
+        c0.set_sort_column_id(2)
+        c1.set_sort_column_id(2)
+        model.set_sort_func(2, compare, None)
+        c2.set_sort_column_id(4)
+
+
+        # FILTER
+        def match_func(model, column, query, iterr, data=None):
+            value = model.get_value(iterr, 6)
+
+            if query == "":
+                return False
+            else:
+                query = query.lower()
+                if query.startswith("+"): query = "\+"
+                if query.startswith("*"): query = "\*"
+                pattern = re.compile(".*"+query+".*")
+                return not pattern.match(value.lower())
+
+        # ADD TO VIEW
         view = Gtk.TreeView(model)
+
+        view.set_search_column(6)
+        view.set_search_equal_func(match_func)
+
         view.append_column(c3)
         view.append_column(c0)
         view.append_column(c1)
         view.append_column(c2)
         view.get_selection().connect('changed', self.view_cursor_changed)
+        view.get_selection().set_mode(2) # BROWSE
         view.connect('button-press-event', self.view_button_clicked)
+        # view.expand_all()
+
 
         # chainQuitKey table (wtf hack)
 
@@ -263,72 +303,107 @@ class KeyTable:
         cqk_view.connect('focus-out-event', cqk_view_focus_lost)
         return (view, cqk_view)
 
+    # Playlist cell_data_func
+    def _cell_func(self, column, cell, model, it, to):
+        p = model.get_path(it)
+        if p in self.deleted_items_paths:
+            color = self.colors['deleting']
+            coloridx = min(self.deleted_items_paths_lvl[str(p)],len(color)-1)
+            cell.set_property("cell-background", color[coloridx])
+        elif p in self.changed_items_paths:
+            cell.set_property("cell-background", self.colors['changed'])
+        else:
+            cell.set_property("cell-background", None)
+
+
     def _create_toolbar(self):
         """_create_toolbar"""
+        agr = Gtk.AccelGroup()
+        self.window.add_accel_group(agr)
+
         toolbar = Gtk.Toolbar()
         toolbar.set_style(Gtk.ToolbarStyle.ICONS)
         toolbar.set_show_arrow(False)
 
-        but = Gtk.ToolButton(Gtk.STOCK_SAVE)
-        but.set_tooltip_text(_("Save ") + self.ob.path + _(" file"))
-        but.connect('clicked', lambda b: self.ob.save(self.keyboard.deparse()))
-        toolbar.insert(but, -1)
-
-        toolbar.insert(Gtk.SeparatorToolItem(), -1)
+        def duplicate(b):
+            self.duplicate_selected()
 
         but = Gtk.ToolButton(Gtk.STOCK_DND_MULTIPLE)
-        but.set_tooltip_text(_("Duplicate sibling keybind"))
-        but.connect('clicked',
-                    lambda b: self.duplicate_selected())
+        but.set_tooltip_text(_("Duplicate sibling keybind")+" (Ctrl + d)")
+        but.connect('clicked', duplicate)
+        key, mod = Gtk.accelerator_parse("<Control>d")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
 
+        def copy(b):
+            self.copy_selected()
+
         but = Gtk.ToolButton(Gtk.STOCK_COPY)
-        but.set_tooltip_text(_("Copy"))
-        but.connect('clicked',
-                    lambda b: self.copy_selected())
+        but.set_tooltip_text(_("Copy")+" (Ctrl + c)")
+        but.connect('clicked', copy)
+        key, mod = Gtk.accelerator_parse("<Control>c")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
 
         toolbar.insert(Gtk.SeparatorToolItem(), -1)
+
+
+        def paste(b):
+            self.insert_sibling( copy.deepcopy(self.copied))
+
+        but = Gtk.ToolButton(Gtk.STOCK_PASTE)
+        but.set_tooltip_text(_("Paste")+" (Ctrl + v)")
+        but.connect('clicked',paste)
+        key, mod = Gtk.accelerator_parse("<Control>v")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
+        toolbar.insert(but, -1)
+
+        def add_sibling(b):
+            self.insert_sibling(OBKeyBind())
 
         but = Gtk.ToolButton()
         but.set_icon_widget(self.icons['add_sibling'])
-        but.set_tooltip_text(_("Insert sibling keybind"))
-        but.connect('clicked',
-                    lambda b: self.insert_sibling(
-                        OBKeyBind()))
+        but.set_tooltip_text(_("Insert sibling keybind")+" (Ctrl + a)")
+        but.connect('clicked',add_sibling)
+        key, mod = Gtk.accelerator_parse("<Control>a")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
 
-        but = Gtk.ToolButton(Gtk.STOCK_PASTE)
-        but.set_tooltip_text(_("Paste"))
-        but.connect('clicked',
-                    lambda b: self.insert_sibling(
-                        copy.deepcopy(self.copied)))
-        toolbar.insert(but, -1)
 
         toolbar.insert(Gtk.SeparatorToolItem(), -1)
+
+        def add_child(b):
+            self.insert_child(OBKeyBind())
 
         but = Gtk.ToolButton()
         but.set_icon_widget(self.icons['add_child'])
-        but.set_tooltip_text(_("Insert child keybind"))
-        but.connect('clicked',
-                    lambda b: self.insert_child(
-                        OBKeyBind()))
+        but.set_tooltip_text(_("Insert child keybind")+" (Ctrl + i)")
+        but.connect('clicked',add_child)
+        key, mod = Gtk.accelerator_parse("<Control>i")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
 
+        def paste_as_child(b):
+            self.insert_child(copy.deepcopy(self.copied))
+
         but = Gtk.ToolButton(Gtk.STOCK_PASTE)
-        but.set_tooltip_text(_("Paste as child"))
-        but.connect('clicked',
-                    lambda b: self.insert_child(
-                        copy.deepcopy(self.copied)))
+        but.set_tooltip_text(_("Paste as child")+" (Ctrl + V)")
+        but.connect('clicked', paste_as_child)
+        key, mod = Gtk.accelerator_parse("<Control><Shift>v")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
 
         toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
+        def remove(b):
+            self.del_selected()
+
         but = Gtk.ToolButton(Gtk.STOCK_REMOVE)
-        but.set_tooltip_text(_("Remove keybind"))
-        but.connect('clicked',
-                    lambda b: self.del_selected())
+        but.set_tooltip_text(_("Remove keybind")+" (Delete)")
+        but.connect('clicked',remove)
         toolbar.insert(but, -1)
+        key, mod = Gtk.accelerator_parse("Delete")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         self.sw_selection_available.append(but)
 
         sep = Gtk.SeparatorToolItem()
@@ -338,12 +413,69 @@ class KeyTable:
 
         toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
-        but = Gtk.ToolButton(Gtk.STOCK_QUIT)
-        but.set_tooltip_text(_("Quit application"))
-        but.connect('clicked',
-                    lambda b: Gtk.main_quit())
+        def reset(b):
+            for p in self.deleted_items_paths + self.changed_items_paths:
+                self._refresh_row(p)
+            self.deleted_items_paths = list()
+            self.changed_items_paths = list()
+            self.ob.load()
+            if self.ob.keyboard_node:
+                self.keyboard = OBKeyboard(self.ob.keyboard_node)
+            for kb in self.keyboard.keybinds:
+                self.apply_keybind(kb)
+
+        but = Gtk.ToolButton(Gtk.STOCK_UNDO)
+        but.set_tooltip_text(_("Undo everything")+" (Ctrl + z)")
+        but.connect('clicked',reset)
+        key, mod = Gtk.accelerator_parse("<Control>z")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
         toolbar.insert(but, -1)
+
+        def save(b):
+            self.apply_delete()
+            self.ob.save(self.keyboard.deparse())
+            self.changed_items_paths=list([])
+
+        but = Gtk.ToolButton(Gtk.STOCK_SAVE)
+        but.set_tooltip_text(_("Save ") + self.ob.path + _(" file") + " (Ctrl + s)")
+        but.connect('clicked', save)
+        key, mod = Gtk.accelerator_parse("<Control>s")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
+        toolbar.insert(but, -1)
+
+
+        def quit(b):
+            Gtk.main_quit()
+
+        but = Gtk.ToolButton(Gtk.STOCK_QUIT)
+        but.set_tooltip_text(_("Quit application") + " (Ctrl + q)")
+        but.connect('clicked', quit)
+        key, mod = Gtk.accelerator_parse("<Control>q")
+        but.add_accelerator("clicked", agr, key, mod, Gtk.AccelFlags.VISIBLE)
+        toolbar.insert(but, -1)
+
         return toolbar
+
+    def apply_delete(self):
+        for p in self.deleted_items_paths:
+            it = self.model.get_iter(p)
+            kb = self.model.get_value(it, 5)
+            kbs = self.keyboard.keybinds
+            if kb.parent:
+                kbs = kb.parent.children
+            kbs.remove(kb)
+            self.model.remove(it)
+        self.deleted_items_paths=dict({})
+
+    def _refresh_row(self, p):
+        it = self.model.get_iter(p)
+        # ugly force update
+        self.model.set_value(it, 0, self.model.get_value(it,0))
+
+    def aging(self):
+        for p in self.deleted_items_paths:
+            self.deleted_items_paths_lvl[str(p)] += 1
+            self._refresh_row(p)
 
     def apply_cqk_initial_value(self):
         """apply_cqk_initial_value"""
@@ -439,7 +571,9 @@ class KeyTable:
         """
         (model, it) = self.view.get_selection().get_selected()
         kb = model.get_value(it, 5)
-
+        p = model.get_path(it)
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
         if len(kb.actions) == 0:
             model.set_value(it, 4, True)
             self.cond_insert_child.set_state(True)
@@ -510,6 +644,10 @@ class KeyTable:
         self.model[path][2] = kstr
         self.model[path][5].key = kstr
 
+        p = self.model.get_path(self.model.get_iter_from_string(path))
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
+
     def key_edited(self, cell, path, text):
         """key_edited
 
@@ -520,6 +658,10 @@ class KeyTable:
         self.model[path][0], self.model[path][1] = key_openbox2gtk(text)
         self.model[path][2] = text
         self.model[path][5].key = text
+
+        p = self.model.get_path(self.model.get_iter_from_string(path))
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
 
     def chroot_toggled(self, cell, path):
         """chroot_toggled
@@ -534,6 +676,10 @@ class KeyTable:
             self.actionlist.set_actions(None)
         elif not kb.children:
             self.actionlist.set_actions(kb.actions)
+
+        p = self.model.get_path(self.model.get_iter_from_string(path))
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
 
     # -------------------------------------------------------------------------
     def cut_selected(self):
@@ -608,6 +754,11 @@ class KeyTable:
             for c in keybind.children:
                 self.apply_keybind(c, newit)
             self.view.get_selection().select_iter(newit)
+            it=newit
+
+        p = model.get_path(it)
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
 
     def insert_child(self, keybind):
         """insert_child
@@ -634,15 +785,19 @@ class KeyTable:
         if len(parent.children) == 1:
             self.actionlist.set_actions(None)
 
+        p = model.get_path(it)
+        self.changed_items_paths.append(p)
+        if p in self.deleted_items_paths: self.deleted_items_paths.remove(p)
+
     def del_selected(self):
         """del_selected"""
-        (model, it) = self.view.get_selection().get_selected()
+        sel = self.view.get_selection()
+        (model, it) = sel.get_selected()
         if it:
-            kb = model.get_value(it, 5)
-            kbs = self.keyboard.keybinds
-            if kb.parent:
-                kbs = kb.parent.children
-            kbs.remove(kb)
-            isok = self.model.remove(it)
-            if isok:
-                self.view.get_selection().select_iter(it)
+            p = model.get_path(it)
+            self.deleted_items_paths.append(p)
+            self.deleted_items_paths_lvl[str(p)] = 0
+            if p in self.changed_items_paths: self.changed_items_paths.remove(p)
+            model.iter_children(it)
+            self.aging()
+            # sel.unselect_all()
