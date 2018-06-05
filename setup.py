@@ -8,7 +8,6 @@ import io
 from glob import glob
 from distutils.core import setup
 from obkey_parts import __version__, __description__, __long_description__
-# Tests pass when  applications are stored in /usr/
 
 NAME = 'obkey'
 DESCRIPTION = __description__
@@ -21,7 +20,7 @@ SCRIPTS = ['obkey']
 PACKAGES = ['obkey_parts']
 PYTHON_REQUIRES = '>=2.7.0'
 VERSION = __version__
-LICENCES = 'MIT'
+LICENCES = 'GPL'
 KEYWORDS = 'openbox keybindings keys shortcuts'
 
 RES_ICONS = ('resources/icons', 'share/obkey/icons')

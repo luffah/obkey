@@ -1,9 +1,13 @@
+"""
+  Obkey package informations.
 
-""" obkey package informations
+  This file is a part of Openbox Key Editor
+  Code under GPL (originally MIT) from version 1.3 - 2018.
+  See Licenses information in ../obkey .
 """
 MAJOR = 1
-MINOR = 2
-PATCH = 2
+MINOR = 3
+PATCH = 1
 
 __version__ = "{0}.{1}.{2}".format(MAJOR, MINOR, PATCH)
 
@@ -19,7 +23,7 @@ It allows to:
         * add/remove/sort/setup actions in the actions list;
         * change the keybind by clicking on the item in the list;
     * duplicate existing keybinds;
-    * remove a keybind.
+    * remove keybinds.
 
 The current drawbacks :
     * XML inculsion is not managed. If you want to edit many files, then you shall open them with `obkey <config file>.xml`;

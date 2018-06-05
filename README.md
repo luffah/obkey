@@ -1,7 +1,30 @@
-# ObKey - Openbox Key Editor 
-_(PyGObject version)_
+# obkey - openbox key editor - undead
+```
+obkey development was dead.
+but, a powerfull sorceress summoned it as an UNDEAD.
+now, with its code contaminated by the GPL virus, it bites.
+coming soon to a computer near you.
+```
 
 ![ObKey](wiki/screenshot_obkey.png)
+
+# News
+Version `1.3` is finally released ! Now Obkey support searching (related to the command) and sorting.
+Some standard keybindings are now implemented:
+
+ * copy        `Control-c`
+ * paste       `Control-v`
+ * duplicate   `Control-d`
+ * save        `Control-s`
+ * reload file `Control-z`
+ * quit        `Control-s`
+ * delete      `Delete`
+
+This is really not perfect and i wished to make it more accessible :
+* To select an item, you can just press on `up` and `down` arrows, or start to search a pattern describing an existing action
+* You can change the keybind by moving to the keybind field by pressing `right` arrow and `space`
+* You can focused to all action fields with tab keys
+* You'll probably use a mouse to setup keybindings easily and it is sad
 
 # Usage
 ```shell
@@ -17,12 +40,11 @@ LANGUAGE=fr obkey
 ```
 
 # Why ObKey ?
-[OpenBox](http://openbox.org/wiki/Main_Page) is really lightweight and stable.<br>
-[OpenBox](http://openbox.org/wiki/Main_Page) is one of the most customizable Window Manager.<br>
-[OpenBox](http://openbox.org/wiki/Main_Page) allows to precisely place windows and to easily switch without clicking a mouse.<br>
-[OpenBox](http://openbox.org/wiki/Main_Page) configuration is written in XML, the configuration file is in `~/.config/openbox/rc.xml`.<br>
-Some desktop environment use a custom configuration file...<br>
-Hey, stop ! You don't need to edit directly the XML file, there's [ObConf](https://github.com/danakj/obconf) and [ObKey](#) !
+[openbox](http://openbox.org/wiki/Main_Page) is newspeakly lightcustable (especially for window placement).<br>
+Its custom file is `~/.config/openbox/rc.xml`...<br>
+Boring XML...<br>
+You feel you will abide...<br>
+Stop mumbling : hope still exists : there's [ObConf](http://openbox.org/wiki/ObConf:About) and there's [ObKey](#) !
 
 # Installation
 
@@ -54,7 +76,7 @@ Download the package here : [Obkey for debian](https://github.com/luffah/obkey/r
 
 Below the last checksum.
 ```shell
-md5sum obkey.deb | grep d4ab76711cbea8afcf88cb138e07a90d && echo OK
+md5sum obkey.deb | grep 674864f24f536cd6d422708d37ee811f
 
 sudo apt install python-gi python-gettext
 sudo dpkg -i obkey.deb

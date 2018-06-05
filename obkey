@@ -1,11 +1,20 @@
 #!/usr/bin/python2
 """
   Openbox Key Editor
+  
+  This file is a part of Openbox Key Editor
+
+  Initial version from 2009 to 2018 is under MIT License
   Copyright (C) 2009 nsf <no.smile.face@gmail.com>
   v1.1 - Code migrated from PyGTK to PyGObject
          github.com/stevenhoneyman/obkey
-  v1.2pre  - 19.06.2016 - structured presentation of actions...
-  v1.2     - 24.02.2018 - slightly refactored code - more dynamic
+  v1.2pre1 - solve a minor bug on copy-paste bug
+  v1.2pre  - 19.06.2016 - i structured presentation of actions...
+ 
+  Change made from 2018 is under GPL License
+  Copyright (C) 2018  luffah <luffah@runbox.com>
+  v1.2     - 24.02.2018 - i slightly refactored the code - i wanted change more dynamic
+  v1.3     - 05.06.2018 - i wanted it more fun, sorting, and searching
          github.com/luffah/obkey
 
   MIT License
@@ -27,6 +36,21 @@
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
+
+  GPL License
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
@@ -82,30 +106,19 @@ def view():
 
     propertytable = PropertyTable()
     actionlist = ActionList(propertytable)
-    keytable = KeyTable(actionlist, obkeyconf)
-    VBOX_GRID = False
-    # FIXME: none of the 2 solutions are clean
-    if VBOX_GRID:
-        # FIXME : got problems when changing the element in the keytabl
-        window.set_default_size(max(width,800), max(height,600))
-        verticalbox = Gtk.VPaned()
-        verticalbox.pack1(propertytable.widget, True, True)
-        verticalbox.pack2(actionlist.widget, True, True)
+    keytable = KeyTable(actionlist, obkeyconf, window)
 
-        horizontalbox = Gtk.HPaned()
-        horizontalbox.pack1(keytable.widget, True, False)
-        horizontalbox.pack2(verticalbox, False, False)
-        window.add(horizontalbox)
-    else :
-        # FIXME : got problems in fullscreen mode
-        window.set_default_size(width, height)
-        grid = Gtk.Grid(column_homogeneous=True, column_spacing=5, row_spacing=200)
-        grid.attach(keytable.widget, 0, 0, 2, 4)
-        grid.attach(propertytable.widget, 2, 0, 1, 3)
-        grid.attach(actionlist.widget, 2, 2, 1, 2)
-        grid.set_hexpand(True)
-        grid.set_vexpand(True)
-        window.add(grid)
+    window.set_default_size(max(width,800), max(height,600))
+    verticalbox = Gtk.VPaned()
+    print(verticalbox.__dict__)
+    verticalbox.set_size_request(300,-1)
+    verticalbox.pack1(propertytable.widget, True, True)
+    verticalbox.pack2(actionlist.widget, True, True)
+
+    horizontalbox = Gtk.HPaned()
+    horizontalbox.pack1(keytable.widget, True, False)
+    horizontalbox.pack2(verticalbox, False, False)
+    window.add(horizontalbox)
     window.show_all()
     keytable.view.grab_focus()
     window.set_default_size(height, width)

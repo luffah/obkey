@@ -26,6 +26,9 @@ msgstr "Coller"
 msgid "Paste as child"
 msgstr "Coller en tant que raccourcis de niveau n + 1 "
 
+msgid "Undo everything"
+msgstr "Annuler les modifications"
+
 msgid "Remove"
 msgstr "Supprimer"
 
