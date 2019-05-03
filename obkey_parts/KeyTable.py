@@ -465,7 +465,7 @@ class KeyTable:
                 kbs = kb.parent.children
             kbs.remove(kb)
             self.model.remove(it)
-        self.deleted_items_paths=dict({})
+        self.deleted_items_paths=list()
 
     def _refresh_row(self, p):
         it = self.model.get_iter(p)

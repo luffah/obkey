@@ -40,7 +40,7 @@ def key_openbox2gtk(obstr):
         toks = obstr.split("-")
     try:
         toksgdk = [REPLACE_TABLE_OPENBOX2GTK[mod.lower()] for mod in toks[:-1]]
-    except BufferError:
+    except KeyError:
         return (0, 0)
     toksgdk.append(toks[-1])
     return Gtk.accelerator_parse("".join(toksgdk))
