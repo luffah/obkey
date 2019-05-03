@@ -1,7 +1,7 @@
 # obkey - openbox key editor - undead
 ```
 obkey development was dead.
-but, a powerfull sorceress summoned it as an UNDEAD.
+but, an evil sorceress summoned it as an UNDEAD.
 now, with its code contaminated by the GPL virus, it bites.
 coming soon to a computer near you.
 ```
@@ -76,7 +76,11 @@ Download the package here : [Obkey for debian](https://github.com/luffah/obkey/r
 
 Below the last checksum.
 ```shell
-md5sum obkey.deb | grep 674864f24f536cd6d422708d37ee811f
+md5sum obkey.deb | grep e17d96e787b7cdc8363ec04ee5788d2e
+
+# Old Checksums
+# v1.3.1 (2018-06-05) 674864f24f536cd6d422708d37ee811f
+# v1.3.2 (2019-05-03) e17d96e787b7cdc8363ec04ee5788d2e
 
 sudo apt install python-gi python-gettext
 sudo dpkg -i obkey.deb

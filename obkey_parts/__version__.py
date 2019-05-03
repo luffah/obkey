@@ -7,7 +7,7 @@
 """
 MAJOR = 1
 MINOR = 3
-PATCH = 1
+PATCH = 2
 
 __version__ = "{0}.{1}.{2}".format(MAJOR, MINOR, PATCH)
 
