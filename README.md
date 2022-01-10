@@ -1,15 +1,18 @@
 # obkey - openbox key editor - undead
 ```
-obkey development was dead.
-but, an evil sorceress summoned it as an UNDEAD.
-now, with its code contaminated by the GPL virus, it bites.
-coming soon to a computer near you.
+ObKey development was dead.
+it was reborn. and is sleeping again.
+
+Actually, i no more use OpenBox since 2019.
+
+If you use OpenBox and want to ensure ObKey still working well, feel free to grab the project
+and notify in Issues you are improving it (there may have technical question you can ask).
 ```
 
 ![ObKey](wiki/screenshot_obkey.png)
 
 # News
-Version `1.3` is finally released ! Now Obkey support searching (related to the command) and sorting.
+Version `1.3` is released ! Obkey support searching (related to the command) and sorting.
 Some standard keybindings are now implemented:
 
  * copy        `Control-c`
@@ -40,11 +43,9 @@ LANGUAGE=fr obkey
 ```
 
 # Why ObKey ?
-[openbox](http://openbox.org/wiki/Main_Page) is newspeakly lightcustable (especially for window placement).<br>
+[openbox](http://openbox.org/wiki/Main_Page) is a very customizable Window Manager.<br>
 Its custom file is `~/.config/openbox/rc.xml`...<br>
-Boring XML...<br>
-You feel you will abide...<br>
-Stop mumbling : hope still exists : there's [ObConf](http://openbox.org/wiki/ObConf:About) and there's [ObKey](#) !
+For configuring it from GUI, there's [ObConf](http://openbox.org/wiki/ObConf:About) and there's [ObKey](#) !
 
 # Installation
 
