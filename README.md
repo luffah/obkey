@@ -1,4 +1,12 @@
 # obkey - openbox key editor - undead
+
+| Year | Repo | Obkey Status  | Is maintained | 
+| :-----   | :-----   | :-----   | :-----   |
+| < 2018 | https://github.com/nsf/obkey | ? |  no |
+| 2018-2019 | https://github.com/luffah/obkey | Somehow stable | no |
+| 2022 |  https://github.com/MX-Linux/obkey | Being rewritten in Python3 by jerry3904 | wip |
+
+
 ```
 ObKey development was dead.
 it was reborn. and is sleeping again.
@@ -9,10 +17,11 @@ If you use OpenBox and want to ensure ObKey still working well, feel free to gra
 and notify in Issues you are improving it (there may have technical question you can ask).
 ```
 
+
 ![ObKey](wiki/screenshot_obkey.png)
 
-# News
-Version `1.3` is released ! Obkey support searching (related to the command) and sorting.
+# Changelog
+2019 - Version `1.3` : Obkey support searching (related to the command) and sorting.
 Some standard keybindings are now implemented:
 
  * copy        `Control-c`
